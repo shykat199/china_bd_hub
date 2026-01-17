@@ -41,6 +41,11 @@ class Category extends Model
         return $this->hasMany(Category::class)->orderBy('order');
     }
 
+    public function subCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class,'category_id','id');
+    }
+
     /**
      * A category has many brands
      *

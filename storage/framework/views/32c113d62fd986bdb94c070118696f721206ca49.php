@@ -37,6 +37,56 @@
         }
     }
 </style>
+
+<style>
+    .category-container {
+        position: relative;
+    }
+
+    .main-manu {
+        position: relative;
+        height: 50px;                /* match your red bar height */
+        background: #c4161c;         /* your red */
+        overflow: hidden;
+    }
+
+    .category-scroll {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+
+    .category-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-scroll li a {
+        color: #fff;
+        padding: 0 16px;
+        line-height: 50px;           /* same as menu height */
+        display: block;
+    }
+
+    .more-indicator {
+        position: absolute;
+        right: 0;                /* OUTSIDE the bar */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px;
+        font-weight: bold;
+        color: #fff !important;
+        background: #c4161c !important;
+        padding: 0 6px;
+        cursor: pointer;
+
+        pointer-events: auto;   /* ✅ allow click */
+        z-index: 100;           /* ✅ stay above menu items */
+    }
+
+</style>
 <div class="manu-bar">
     <div class="container">
         <div class="row align-items-center">
@@ -94,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9">
+            <div class="col-lg-9 category-container">
                 <nav class="main-manu">
                     <button class="close-btn">
                         <span></span>
@@ -105,22 +155,37 @@
                             <a href="<?php echo e(url('shop')); ?>" class="<?php echo e(isActiveMenu('shop')); ?>"><?php echo e(__('All Products')); ?></a>
                         </li>
 
-
-
-
-
                         <?php $__currentLoopData = menubars(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $menubar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <li>
                                 <a href="<?php echo e(route('category', $menubar->slug)); ?>"
                                    class="<?php echo e(isActiveMenu($menubar->slug)); ?>"><?php echo e($menubar->name); ?></a>
                             </li>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        
                     </ul>
+
+                    <span class="more-indicator text-white" id="scrollRight">&raquo;</span>
                 </nav>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scrollBtn = document.getElementById('scrollRight');
+        const menu = document.querySelector('.category-scroll');
+
+        scrollBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const maxScrollLeft = menu.scrollWidth - menu.clientWidth;
+
+            menu.scrollTo({
+                left: maxScrollLeft,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 <!-- Menu Bar End -->
 <?php /**PATH /var/www/html/china_hub/resources/views/frontend/includes/menu-bar.blade.php ENDPATH**/ ?>

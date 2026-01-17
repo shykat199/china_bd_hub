@@ -5,7 +5,7 @@
             <div class="modal-body">
                 <div class="maan-modal-wraper">
                     <div class="modal-thumb">
-                        <img src="{{ asset('frontend/img/' . $pop_up->image) }}" alt="">
+                        <img src="{{ asset('uploads/frontend/img/' . $pop_up->image) }}" alt="">
                     </div>
                     <div class="maan-modal-content">
                         <div class="content-wraper">

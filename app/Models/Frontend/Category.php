@@ -66,4 +66,9 @@ class Category extends Model
             ->where('is_active',1)
             ->count();
     }
+
+    public function subCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class,'category_id','id');
+    }
 }

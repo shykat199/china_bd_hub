@@ -16,16 +16,145 @@
 
 @push('custom-css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.15/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        .custom-breadcrumb {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-breadcrumb .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Add > AFTER each item EXCEPT the last */
+        .custom-breadcrumb .breadcrumb-item:not(:last-child)::after {
+            content: ">";
+            margin: 0 10px;
+            color: #999;
+        }
+
+        /* Remove Bootstrap default separator */
+        .custom-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+            content: none !important;
+        }
+
+        /* Container */
+        .small-container {
+            margin-top: 15px;
+        }
+
+        /* Thumbnails row */
+        #small-img-roll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+
+        #small-img-roll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Thumbnail image */
+        .show-small-img {
+            width: 90px;                 /* 🔥 bigger */
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;         /* soft luxury corners */
+            cursor: pointer;
+            background: #fff;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect (premium feel) */
+        .show-small-img:hover {
+            transform: scale(1.08);
+            border-color: #c4161c;       /* match brand color */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Active thumbnail (when selected) */
+        .show-small-img.active {
+            border: 2px solid #c4161c;
+        }
+
+
+        /* Main image container – BIGGER */
+        .main-image-wrapper {
+            width: 100%;
+            max-width: 1000px;         /* ⬅️ near full PDP width */
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 4px;              /* ⬅️ almost no padding */
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Main product image – BIGGER & CLEAR */
+        .main-image-wrapper {
+            width: 100%;
+            max-width: 1000px;         /* ⬅️ near full PDP width */
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 4px;              /* ⬅️ almost no padding */
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Subtle luxury hover zoom */
+        .main-image-wrapper:hover #show-img {
+            transform: scale(1.06);
+        }
+
+        @media (max-width: 991px) {
+            .layout-items {
+                margin-top: 60px !important;
+            }
+
+            .small-img {
+                max-width: 400px;
+                height: 70px;
+                 margin-top:0;
+                position: relative;
+                left: 0;
+            }
+
+            .mobile-and-desktop-search {
+                top: 70px !important;
+            }
+        }
+
+    </style>
 @endpush
 
 @section('content')
     <!-- Breadcrumb Start -->
     <nav class="breadcrumb-manu" area-label="breadcrumb">
         <div class="container">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ url('shop') }}">{{ __('Shop') }}</a></li>
-                <li class="breadcrumb-item active" Area-current="page">{{ __('Product') }}</li>
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url('/') }}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url('shop') }}">Shop</a>
+                </li>
+                @if($product->category)
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('category',[$product->category->slug])}}">{{$product->category->name}}</a>
+                    </li>
+                @endif
+                @if($product->category->subCategory)
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('category',[$product->category->subCategory->slug])}}">{{$product->category->subCategory->name}}</a>
+                    </li>
+                @endif
+                <li class="breadcrumb-item active" aria-current="page">
+                    Product
+                </li>
             </ol>
         </div>
     </nav>
@@ -38,9 +167,13 @@
 
 
                     <!-- Primary carousel image -->
-                    @if ($product->images->first()->image ?? false)
-                        <div class="show product-zoom-thumb" href="{{ asset('uploads/products/galleries/' . $product->images->first()->image ?? '') }}">
-                            <img src="{{ asset('uploads/products/galleries/' . $product->images->first()->image ?? '') }}" id="show-img" alt="{{ $product->name }}">
+                    @if ($product->images->first())
+                        <div class="main-image-wrapper">
+                            <img
+                                src="{{ asset('uploads/products/galleries/' . $product->images->first()->image) }}"
+                                id="show-img"
+                                alt="{{ $product->name }}"
+                            >
                         </div>
                     @endif
 
@@ -51,7 +184,11 @@
                         <div class="small-container">
                             <div id="small-img-roll">
                                 @foreach ($product->images as $image)
-                                    <img src="{{ asset('uploads/products/galleries/' . $image->image) }}" class="show-small-img" alt="product-thumbnail-sm">
+                                    <img
+                                        src="{{ asset('uploads/products/galleries/' . $image->image) }}"
+                                        class="show-small-img"
+                                        alt="product-thumbnail-sm"
+                                    >
                                 @endforeach
                             </div>
                         </div>

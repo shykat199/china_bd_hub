@@ -38,46 +38,15 @@
 
 @section('content')
 <div class="row m-3">
-    
-    {{-- <div class="container-fluid mx-2" style="background-color: white; padding:20px; border-radius: 7px; margin-right: 23px">
-        <table class="table mx-2">
-            <thead>
-              <tr>
-                <th style="font-weight: 500" scope="col">Id</th>
-                <th style="font-weight: 500; width: 10vw; text-align: center">Image</th>
-                <th style="font-weight: 500; width: 55vw;" scope="col">Description</th>
-                <th style="font-weight: 500" scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-                @foreach ($pop_ups as $key => $pop_up)
-                    <tr>
-                        <td>{{ $pop_up->id }}</td>
-                        <td style="width: 10vw; text-align: center">
-                            <img src="" alt="image" width="100">
-                        </td>
-                        <td>{{ $pop_up->description }}</td>
-                        <td>
-                            <form id="status_form" action="{{ route('backend.website_setting.popup.update', $pop_up->id) }}" method="post">
-                                @csrf
-                                @method('put')
-                                
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-          </table>
-    </div> --}}
-   
-@if(isset($pop_up->id))
+
+@if(!empty($pop_up->id))
     <form action="{{ route('backend.website_setting.popup.update', $pop_up->id) }}" method="POST" enctype="multipart/form-data" class="mt-2 p-2 col-lg-12">
         @method('put')
 @else
 <form action="{{ route('backend.website_setting.popup.create') }}" method="POST" enctype="multipart/form-data" class="mt-2 p-2 col-lg-12">
 @endif
         @csrf
-        
+
         <div class="container-fluid" style="background-color: white; padding:20px; border-radius: 7px;">
             <!-- Description -->
             <div class="form-group">
@@ -90,7 +59,7 @@
             @if(isset($pop_up->id))
             <div id="image-preview">
                 <div id="image-container2">
-                    <img src="{{ asset('frontend/img/' . $pop_up->image) }}" alt="image" width="250" height="250">
+                    <img src="{{ asset('uploads/frontend/img/' . $pop_up->image) }}" alt="image" width="250" height="250">
                 </div>
             </div>
             @endif
@@ -107,7 +76,7 @@
                 <label class="form-check-label" for="flexSwitchCheckDefault">Status</label>
                 <input name="status2" class="form-check-input mx-1" type="checkbox" role="switch" id="on_off_button" {{ (isset($pop_up->is_active) && $pop_up->is_active ) ? 'checked' : '' }}/>
             </div>
-            
+
             <button type="submit" class="btn btn-success mt-3" style="color: white;">Update</button>
 
         </div>
@@ -125,7 +94,7 @@
             const imagePreviewContainer = document.getElementById(
                 'image-preview'); // Get the container for image previews
 
-            $('#image-container2').css('display', 'none');    
+            $('#image-container2').css('display', 'none');
             const files = event.target.files; // Get the files from the input event
             const currentSelectedImages =
                 new DataTransfer(); // Create a new DataTransfer object for current selected images
