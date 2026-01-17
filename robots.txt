@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /routes/
+Disallow: /app/
+Disallow: /resources/
+
+Sitemap: https://www.chinabdhub.com/sitemap.xml

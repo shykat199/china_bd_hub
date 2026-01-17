@@ -1,0 +1,330 @@
+/*
+Theme Name: My Bazar Ecommerce HTML5 Template
+Theme URI: https://maantheme.com/my-bazar
+Author: Maan Theme
+Author URI: https://maantheme.com
+Desing by: Maan Theme
+Developed by: Abdullah Al Numan
+Version: 2.0
+License:
+Tags:
+*/
+/*================================================
+[  Table of contents  ]
+================================================
+
+    1 Theme Default
+
+    2 Top Bar
+
+    3 Mid Bar
+
+    4 User Dashbord
+
+    5 Side Bar User
+
+    6 Order
+
+    7 Announce
+
+    8 Faq
+
+    9 Invoice
+
+    10 Footer
+
+======================================
+[ End table content ]
+======================================*/
+:root {
+  --color-white: #FFFFFF;
+  --color-white2: #F1F1F1;
+  --color-white3: #E2E2E2;
+  --color-white4: #F8F8F8;
+  --color-black: #191919;
+  --color-gBlack: #6D6D73;
+  --color-border: #CCCCCC;
+  --color-orange: #FF8400;
+  --color-lBlue: #D7F5FF;
+  --color-tr: transparent;
+}
+
+@media (max-width: 1400px) {
+  /*=====================
+      6 Order
+  =======================*/
+  .user-dashbord .order-manu .nav-link {
+    width: calc(24% - 12px);
+    margin: 0px 12px 25px 12px;
+  }
+  .user-dashbord .content-table {
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  .user-dashbord .content-table .table {
+    display: block;
+  }
+  .user-dashbord .order-content .search-name {
+    margin-bottom: 25px;
+  }
+  /*=====================
+      10 Footer
+  =======================*/
+  footer .info-footer {
+    padding-top: 70px;
+  }
+  footer .info-footer h6 ~ ul li a {
+    font-size: 12px;
+  }
+  footer .info-footer h6 ~ ul li a:hover {
+    padding-left: 22px;
+  }
+}
+@media (max-width: 1199px) {
+  /*=====================
+      1 Theme Default
+  =======================*/
+  section.user-dashbord {
+    padding: 50px 0px;
+  }
+  .pagination-bar {
+    margin-top: 30px;
+  }
+  /*=====================
+      6 Order
+  =======================*/
+  .user-dashbord .order-manu .nav-link {
+    width: calc(50% - 12px);
+  }
+  .user-dashbord .order-manu .nav-link:nth-last-of-type(1n) {
+    margin: 0px 12px 25px 0px;
+  }
+  .user-dashbord .order-manu .nav-link:nth-of-type(2n) {
+    margin: 0px 0px 25px 12px;
+  }
+  /*=====================
+       7 Announce
+  =======================*/
+  .announce .card .post-text {
+    padding: 15px 0px;
+  }
+  /*=====================
+       9 Invoice
+  =======================*/
+  .invoice .step-pro ul {
+    text-align: center;
+  }
+  .invoice .step-pro ul li {
+    margin-right: calc(6% - 8px + 12px);
+  }
+  .invoice .step-pro ul li::before {
+    width: calc(100% + 12px);
+  }
+  .invoice .card.timeline-item {
+    margin-bottom: 0px !important;
+  }
+}
+@media (max-width: 991px) {
+  /*=====================
+      1 Theme Default
+  =======================*/
+  footer .main-footer .back-to-top {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+  }
+  /*=====================
+      2 Top Bar
+  =======================*/
+  .top-bar.sticky {
+    margin-bottom: 58px;
+  }
+  .top-bar .top-bar-left li,
+  .top-bar .top-bar-right > ul > li {
+    padding: 8px 14px;
+  }
+  .top-bar .top-bar-left li a span.icon svg {
+    --svg-font-size: 13px;
+  }
+  .top-bar .top-bar-left li a span.text {
+    font-size: 13px;
+  }
+  .top-bar .top-bar-right .currency-manu .flag {
+    width: 14px;
+    height: 14px;
+    top: 2px;
+    line-height: 0;
+  }
+  .top-bar .top-bar-right .currency-manu .flag-title {
+    font-size: 13px;
+  }
+  /*=====================
+      3 Mid Bar
+  =======================*/
+  .mid-bar {
+    padding: 15px 0px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mid-bar .logo a {
+    max-width: 110px;
+  }
+  .mid-bar .mair-right {
+    padding-right: 50px;
+  }
+  .mid-bar .mair-right li .popup-search > button svg,
+  .mid-bar .mair-right li a .icon svg,
+  .mid-bar .mair-right li button .icon svg {
+    --svg-font-size: 15px;
+  }
+  .mid-bar .mair-right > ul > li {
+    margin-right: 13px;
+  }
+  .mid-bar .mair-right .menu-btn {
+    position: absolute;
+    display: inline-block;
+  }
+  .mid-bar .popup-search {
+    display: block !important;
+  }
+  .manu-bar {
+    display: none;
+  }
+  /*=====================
+      4 User Dashbord
+  =======================*/
+  .user-dashbord .close-btn {
+    display: inline-block !important;
+  }
+  .user-dashbord .side-bar-user {
+    position: fixed;
+    width: 350px;
+    top: 0;
+    left: -100%;
+    z-index: 8;
+    transition: all 0.4s ease;
+  }
+  .user-dashbord .side-bar-user.active {
+    left: 0px;
+  }
+  .user-dashbord .side-bar-user .overlay {
+    display: block;
+    width: calc(100% - 350px);
+    left: -100%;
+    transition: all 0.4s ease;
+  }
+  .user-dashbord .side-bar-user .overlay.active {
+    opacity: 0.3;
+    visibility: visible;
+    left: 350px;
+  }
+  .user-dashbord .side-bar-user ul {
+    margin-top: 30px;
+  }
+  /*=====================
+      12 Footer
+  =======================*/
+  footer .info-footer {
+    padding: 50px;
+  }
+  footer .info-footer a::before, footer .info-footer a::after {
+    content: none !important;
+  }
+  footer .info-footer a:hover {
+    padding-left: 0px !important;
+  }
+  footer .info-footer .footer-right {
+    text-align: center;
+    margin-top: 30px;
+  }
+  footer .info-footer .footer-right h6::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  footer .info-footer .payment-gateway .row {
+    width: 300px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 767px) {
+  /*=====================
+      2 Top Bar
+  =======================*/
+  .top-bar .top-bar-left li:last-child {
+    display: none;
+  }
+  /*=====================
+      12 Footer
+  =======================*/
+  footer .info-footer .footer-left,
+  footer .info-footer ul {
+    text-align: center;
+  }
+  footer .info-footer h6 {
+    text-align: center;
+    margin: 30px 0px 20px 0px;
+  }
+  footer .info-footer h6::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+@media (max-width: 575px) {
+  /*=====================
+      2 Top Bar
+  =======================*/
+  .top-bar {
+    padding: 10px 0px;
+  }
+  .top-bar .top-bar-left,
+  .top-bar .top-bar-right ul {
+    text-align: center;
+  }
+  .top-bar .top-bar-left li,
+  .top-bar .top-bar-right ul li {
+    border: none;
+  }
+  /*=====================
+      4 User Dashbord
+  =======================*/
+  .user-dashbord .side-bar-user {
+    width: 100%;
+  }
+  .user-dashbord .side-bar-user .overlay {
+    display: none !important;
+  }
+  footer .info-footer .footer-left li a {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+  }
+}
+@media (max-width: 454px) {
+  .manu-bar {
+    width: 100%;
+  }
+  .manu-bar .overlay.active {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .manu-bar .mair-right li:nth-child(1), .manu-bar .mair-right li:nth-child(2) {
+    display: none;
+  }
+  footer .info-footer .footer-left li a {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+  }
+  footer .main-footer .left-link,
+  footer .main-footer .right-text {
+    text-align: center;
+  }
+  footer .main-footer .right-text {
+    margin-top: 15px;
+  }
+}
+@media (max-width: 454px) {
+  .mid-bar .mair-right > ul > li:nth-child(1),
+  .mid-bar .mair-right > ul > li:nth-child(2) {
+    display: none;
+  }
+}/*# sourceMappingURL=responsive.css.map */
