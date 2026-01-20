@@ -370,23 +370,26 @@ class ProductController extends Controller
             ]);
 
             if ($request->colors_new || $request->quantities_new || $request->sizes_new) {
-                // $old_product_stocks = Productstock::where('product_id', $product->id)->get();
-                // Productstock::where('product_id', $product->id)->delete();
-                // $request->validate([
-                //     'colors_new.*' => 'required',
-                //     'quantities_new.*' => 'required',
-                //     'sizes_new.*' => 'required',
-                // ], [
-                //     'colors_new.*.required' => __('Color is required'),
-                //     'quantities_new.*.required' => __('Quantity is required'),
-                //     'sizes_new.*.required' => __('Size is required'),
-                // ]);
                 $sizes = [];
                 $colors = [];
-                foreach ($request->colors_new as $key => $color) {
-                    in_array($color, $colors) ? $color = NULL : $color = $color;
-                    array_push($colors, $color);
-                    in_array($request->sizes_new[$key], $sizes) ? $size = NULL : $size = $request->sizes_new[$key];
+
+                foreach ($request->colors_new as $key => $colorValue) {
+
+                    // ✅ COLOR: if custom string, create & get id
+                    if (!empty($colorValue) && !is_numeric($colorValue)) {
+                        $colorModel = Color::firstOrCreate([
+                            'name' => trim($colorValue),
+                            'display_in_search' => 1,
+                        ]);
+                        $colorValue = $colorModel->id;
+                    }
+
+                    // your existing duplicate prevention
+                    in_array($colorValue, $colors) ? $color = null : $color = $colorValue;
+                    array_push($colors, $colorValue);
+
+                    // ✅ SIZE (keep yours as-is)
+                    in_array($request->sizes_new[$key], $sizes) ? $size = null : $size = $request->sizes_new[$key];
                     array_push($sizes, $request->sizes_new[$key]);
 
                     $image = $request->file('variant_image_new')[$key] ?? [];
@@ -399,11 +402,11 @@ class ProductController extends Controller
                     }
 
                     Productstock::create([
-                        'product_id' => $product->id,
-                        'color_id' => $color,
-                        'size_id' => $size,
-                        'quantities' => $request->quantities_new[$key],
-                        'variant_image' => $image_path,
+                        'product_id'     => $product->id,
+                        'color_id'       => $color, // ✅ now always id or null
+                        'size_id'        => $size,
+                        'quantities'     => $request->quantities_new[$key],
+                        'variant_image'  => $image_path,
                     ]);
                 }
             }
@@ -678,78 +681,77 @@ class ProductController extends Controller
                 // $data['courieres'] = $request->input('courieres') ?? NULL;
                 $data['attributes'] = json_encode($request->input('attributes'));
 
-                // if ($request->previous_courieres && $request->input('courieres') == '') {
-                //     $prev_product = Product::where('seller_id', $request->seller_id ?? auth('seller')->id())->whereNotNull('courieres')->latest()->first();
-                //     if (!$prev_product) {
-                //         return response()->json(__('Courier not found, please select available courriers.'), 403);
-                //     }
-                //     $data['courieres'] = $prev_product->courieres;
-                // }
-                // dd($request->colors);
-                if ($request->has('colors_new') || $request->has('quantities_new') || $request->has('sizes_new')) {
-                    // $old_product_stocks = Productstock::where('product_id', $product->id)->get();
-                    // Productstock::where('product_id', $product->id)->delete();
-                    // $request->validate([
-                    //     'colors_new.*' => 'required',
-                    //     'quantities_new.*' => 'required',
-                    //     'sizes_new.*' => 'required',
-                    // ], [
-                    //     'colors_new.*.required' => __('Color is required'),
-                    //     'quantities_new.*.required' => __('Quantity is required'),
-                    //     'sizes_new.*.required' => __('Size is required'),
-                    // ]);
-                    $sizes = [];
-                    $colors = [];
-                    foreach ($request->colors_new as $key => $color) {
-                        in_array($color, $colors) ? $color = NULL : $color = $color;
-                        array_push($colors, $color);
-                        in_array($request->sizes_new[$key], $sizes) ? $size = NULL : $size = $request->sizes_new[$key];
-                        array_push($sizes, $request->sizes_new[$key]);
 
-                        $image = $request->file('variant_image_new')[$key] ?? [];
+                if ($request->has('colors_new') || $request->has('quantities_new') || $request->has('sizes_new')) {
+
+                    $sizesUsed = [];
+                    $colorsUsed = [];
+
+                    foreach ($request->colors_new as $key => $colorValue) {
+
+                        // ✅ convert custom color name -> id
+                        if (!empty($colorValue) && !is_numeric($colorValue)) {
+                            $colorModel = Color::firstOrCreate([
+                                'name' => trim($colorValue),
+                                'display_in_search'=>1
+                            ]);
+                            $colorValue = $colorModel->id;
+                        }
+
+                        // keep your duplicate logic (as-is)
+                        in_array($colorValue, $colorsUsed, true) ? $color = null : $color = $colorValue;
+                        $colorsUsed[] = $colorValue;
+
+                        $sizeValue = $request->sizes_new[$key] ?? null;
+
+                        in_array($sizeValue, $sizesUsed, true) ? $size = null : $size = $sizeValue;
+                        $sizesUsed[] = $sizeValue;
+
+                        $image = $request->file('variant_image_new')[$key] ?? null;
                         $image_path = null;
 
                         if (!empty($image)) {
                             $image_path = Storage::putFile('products/galleries', $image);
-                            $pattern = "/products\/galleries\//";
-                            $image_path = preg_replace($pattern, '', $image_path);
+                            $image_path = preg_replace("/products\/galleries\//", '', $image_path);
                         }
 
                         Productstock::create([
-                            'product_id' => $product->id,
-                            'color_id' => $color,
-                            'size_id' => $size,
-                            'quantities' => $request->quantities_new[$key],
-                            'variant_image' => $image_path,
+                            'product_id'     => $product->id,
+                            'color_id'       => $color,
+                            'size_id'        => $size,
+                            'quantities'     => $request->quantities_new[$key] ?? 0,
+                            'variant_image'  => $image_path,
                         ]);
                     }
                 }
-                if($request->has('colors') || $request->has('sizes') || $request->has('quantities')) {
-                    // $request->validate([
-                    //     'colors.*' => 'required',
-                    //     'quantities.*' => 'required',
-                    //     'sizes.*' => 'required',
-                    // ], [
-                    //     'colors.*.required' => __('Color is required'),
-                    //     'quantities.*.required' => __('Quantity is required'),
-                    //     'sizes.*.required' => __('Size is required'),
-                    // ]);
-                    // dd($request->colors);
-                    $ids = $request->product_stock_id;
-                    $colors = $request->colors;
-                    $sizes = $request->sizes;
+                if ($request->has('colors') || $request->has('sizes') || $request->has('quantities')) {
+
+                    $ids        = $request->product_stock_id;
+                    $colors     = $request->colors;
+                    $sizes      = $request->sizes;
                     $quantities = $request->quantities;
 
-                    $new_variants = array_map(function ($id, $color, $size, $quantity) {
-                        return array(
+                    $new_variants = array_map(function ($id, $colorValue, $sizeValue, $quantity) {
+
+                        // ✅ convert custom color name -> id (for update too)
+                        if (!empty($colorValue) && !is_numeric($colorValue)) {
+                            $colorModel = Color::firstOrCreate([
+                                'name' => trim($colorValue),
+                                'display_in_search'=>1
+                            ]);
+                            $colorValue = $colorModel->id;
+                        }
+
+                        return [
                             'product_stock_id' => $id,
-                            'color_id' => $color,
-                            'size_id' => $size,
-                            'quantities' => $quantity,
-                        );
+                            'color_id'         => $colorValue,
+                            'size_id'          => $sizeValue,
+                            'quantities'       => $quantity,
+                        ];
+
                     }, $ids, $colors, $sizes, $quantities);
 
-                    foreach ($new_variants as $key => $variant) {
+                    foreach ($new_variants as $variant) {
                         $product_stock = Productstock::where('id', $variant['product_stock_id']);
                         unset($variant['product_stock_id']);
                         $product_stock->update($variant);

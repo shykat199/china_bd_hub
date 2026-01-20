@@ -75,28 +75,6 @@
                     <span class="sm-text">{{ __('This is used for search. Input those words by which customer can find this product.') }}</span>
                 </div>
             </div>
-            {{-- <div class="col-lg-2">
-                <p>{{ __('Select courier') }} </p>
-            </div>
-            <div class="col-lg-4">
-                <div class="sm-title-group">
-                    <div class="input-group overflow-visible">
-                        <select name="courieres[]" multiple="multiple" class="courieres form-select" Area-label="Select courieres">
-                            @if ($product->courieres != '' && $product->courieres != 'null')
-                                @foreach (json_decode($product->courieres) as $courier)
-                                    <option value="{{ $courier }}" selected>{{ $courier }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="previous_courieres" value="1" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            {{ __("Click for the previous product's couriers.") }}
-                        </label>
-                    </div>
-                </div>
-            </div> --}}
 
             <div class="col-lg-2">
                 <p>{{ __('Barcode') }} </p>
@@ -277,13 +255,13 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button text-center font-weight-bold d-inline-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" Area-expanded="true" Area-controls="collapseOne">
-                                    {{ __('Do you want to add vAreation for this product?') }}
+                                    {{ __('Do you want to add Variation for this product?') }}
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse {{ $product->productstock ? 'show' : '' }}" Area-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <div class="d-flex justify-content-between mb-3">
-                                        <h5>{{ __('VAreation wise stock') }}</h5>
+                                        <h5>{{ __('Variation wise stock') }}</h5>
                                         <button type="button" class="btn btn-warning btn-sm base-bg text-light another-vAreation"><i class="fa fa-plus-circle d-inline-block mt-1" Area-hidden="true"></i></button>
                                     </div>
                                     <div class="vAreants">
@@ -294,7 +272,7 @@
                                             <input type="hidden" name="product_stock_id[]" value="{{ $productstock->id }}">
                                             <div class="input-group mb-4 d-flex align-items-center">
                                                 <button type="button" data-product_stock_id="{{ $productstock->id }}" class="btn btn-danger input-group-text btn-sm text-light remove-row"><i class="fas fa-trash d-inline-block mt-1"></i></button>
-                                                <select name="colors[]" class="form-control">
+                                                <select name="colors[]" class="form-control color-select">
                                                     <option value=""> {{ __('Select Color') }}-</option>
                                                     @foreach ($colors as $key => $color)
                                                         <option {{ $productstock->color_id == $color->id ? 'selected' : '' }} value="{{ $color->id }}">{{ $color->name }}</option>

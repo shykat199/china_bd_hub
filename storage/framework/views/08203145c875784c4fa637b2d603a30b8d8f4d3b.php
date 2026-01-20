@@ -1,26 +1,26 @@
 <script>
-    let count = @json($count ?? 0);
+    let count = <?php echo json_encode($count ?? 0, 15, 512) ?>;
 
     $('.another-vAreation').on('click', function() {
         count++
         var inputs = `<div class="input-group mb-4 d-flex align-items-center">
                             <button type="button" class="btn btn-danger input-group-text btn-sm text-light remove-row"><i class="fas fa-trash d-inline-block mt-1"></i></button>
                             <select name="colors_new[]" class="form-control color-select">
-                                <option value="">-{{ __('Select Color') }}-</option>
-                                @foreach ($colors as $key => $color)
-                                    <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                @endforeach
+                                <option value="">-<?php echo e(__('Select Color')); ?>-</option>
+                                <?php $__currentLoopData = $colors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($color->id); ?>"><?php echo e($color->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <select name="sizes_new[]" class="form-control">
-                                <option value="">-{{ __('Select Size') }}-</option>
-                                @foreach ($sizes as $key => $sz)
-                                    <option value="{{ $sz->id }}">{{ $sz->name }}</option>
-                                @endforeach
+                                <option value="">-<?php echo e(__('Select Size')); ?>-</option>
+                                <?php $__currentLoopData = $sizes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $sz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($sz->id); ?>"><?php echo e($sz->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <input type="number" class="form-control variant-qty" placeholder="Enter quantity" name="quantities_new[]">
                             <div>
                                 <label for="variantImage${count}">
-                                    <img src="{{ asset('dummy-image-square.jpg') }}" alt="Choose Image" width="80" height="160" style="border-radius: 4px; margin: 3px">
+                                    <img src="<?php echo e(asset('dummy-image-square.jpg')); ?>" alt="Choose Image" width="80" height="160" style="border-radius: 4px; margin: 3px">
                                 </label>
                                 <input id="variantImage${count}" type="file" class="form-control d-none" name="variant_image_new[]" onchange="showImage(event)">
                             </div>
@@ -66,7 +66,7 @@
                     type: "delete",
                     dataType: "json",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                     },
                     success: function(res) {
                         if (res.status) {
@@ -85,3 +85,4 @@
         }
     })
 </script>
+<?php /**PATH /var/www/html/china_hub/app/Modules/Backend/ProductManagement/Resources/views/products/product-js.blade.php ENDPATH**/ ?>
