@@ -28,6 +28,12 @@ Route::fallback(function () {
     abort(404);
 });
 
+Route::post('variants/update/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'update'])->name('variant.update');
+Route::post('variants/delete/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'destroy'])->name('variant.delete');
+
+Route::post('variants-size/update/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'sizeUpdate'])->name('variant.size.update');
+Route::post('variants-size/delete/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'sizeDestroy'])->name('variant.size.delete');
+
 
 /*  route */
 Route::group(['prefix' => 'admin', 'namespace' => 'Backend', 'as' => 'backend.'], function () {

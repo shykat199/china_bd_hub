@@ -32,6 +32,7 @@
                                         <th scope="col">Sl</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Hex Code</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -40,6 +41,29 @@
                                             <th scope="row">{{ $color->id }}</th>
                                             <td>{{ $color->name }}</td>
                                             <td>{{ $color->hex }}</td>
+                                            <td>
+                                                <!-- EDIT -->
+                                                <button
+                                                    class="btn btn-sm btn-primary edit-btn"
+                                                    data-id="{{ $color->id }}"
+                                                    data-name="{{ $color->name }}"
+                                                    data-hex="{{ $color->hex }}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editColorModal">
+                                                    Edit
+                                                </button>
+
+                                                <!-- DELETE -->
+                                                <form action="{{ route('variant.delete', $color->id) }}"
+                                                      method="POST"
+                                                      class="d-inline">
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-danger text-white"
+                                                            onclick="return confirm('Are you sure?')">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -52,6 +76,69 @@
                 </div>
             </div>
         </div>
-        <!-- Tab Content End -->
+        <!-- EDIT COLOR MODAL -->
+        <div class="modal fade" id="editColorModal" tabindex="-1">
+            <div class="modal-dialog">
+                <form method="POST" id="editColorForm">
+                    @csrf
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Color</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label>Name</label>
+                                <input type="text" name="name"
+                                       class="form-control"
+                                       id="editName" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Hex Code</label>
+                                <input type="color" name="hex"
+                                       class="form-control form-control-color"
+                                       id="editHex" required>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary text-white"
+                                    data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button class="btn btn-success text-white">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
+@push('custom-script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function () {
+
+                    const id   = this.dataset.id;
+                    const name = this.dataset.name;
+                    const hex  = this.dataset.hex;
+
+                    document.getElementById('editName').value = name;
+                    document.getElementById('editHex').value  = hex;
+
+                    // 🔥 THIS IS THE FIX
+                    document.getElementById('editColorForm').action =
+                        "{{ url('variants/update') }}/" + id;
+                });
+            });
+
+        });
+    </script>
+@endpush

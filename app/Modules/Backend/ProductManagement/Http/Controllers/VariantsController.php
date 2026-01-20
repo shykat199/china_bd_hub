@@ -2,6 +2,8 @@
 
 namespace App\Modules\Backend\ProductManagement\Http\Controllers;
 
+use App\Models\Backend\Color;
+use App\Models\Backend\Size;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -100,7 +102,22 @@ class VariantsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // validation
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'hex'  => 'required|string|max:20',
+        ]);
+
+        // find color
+        $color = Color::findOrFail($id);
+
+        // update
+        $color->update([
+            'name' => $request->name,
+            'hex'  => $request->hex,
+        ]);
+
+        return redirect()->back()->with('success', 'Color updated successfully.');
     }
 
     /**
@@ -110,6 +127,37 @@ class VariantsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $color = Color::findOrFail($id);
+        $color->delete();
+
+        return redirect()->back()->with('success', 'Color deleted successfully.');
     }
+
+
+    public function sizeUpdate(Request $request, $id)
+    {
+        // validation
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        // find color
+        $color = Size::findOrFail($id);
+
+        // update
+        $color->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back()->with('success', 'Size updated successfully.');
+    }
+
+    public function sizeDestroy($id)
+    {
+        $color = Size::findOrFail($id);
+        $color->delete();
+
+        return redirect()->back()->with('success', 'Size deleted successfully.');
+    }
+
 }
