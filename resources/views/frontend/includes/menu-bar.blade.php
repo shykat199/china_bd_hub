@@ -87,6 +87,75 @@
     }
 
 </style>
+
+<style>
+    /* ===============================
+   MOBILE CATEGORY MENU
+   =============================== */
+
+    .mobile-category-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #111;
+        z-index: 1050;
+
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+
+        overflow-y: auto;
+    }
+
+    .mobile-category-menu.show {
+        transform: translateX(0);
+    }
+
+    /* close button */
+    .mobile-menu-close {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        font-size: 32px;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    /* mobile list */
+    .mobile-category-list {
+        list-style: none;
+        padding: 60px 0 0;
+        margin: 0;
+    }
+
+    .mobile-category-list li {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .mobile-category-list li a {
+        display: block;
+        padding: 14px 16px;
+        text-align: center;
+        background: #c4161c;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .mobile-category-list li a:hover,
+    .mobile-category-list li a.active {
+        background: #a31216;
+    }
+
+    /* hide mobile menu on desktop */
+    @media (min-width: 992px) {
+        .mobile-category-menu {
+            display: none !important;
+        }
+    }
+</style>
 <div class="manu-bar">
     <div class="container">
         <div class="row align-items-center">
@@ -100,16 +169,6 @@
                             @foreach(menus() as $menu)
                                 <li>
                                     <a class="px-0" href="{{ route('category',$menu->slug??'undefined') }}" >
-{{--                                        <img--}}
-{{--                                            src="{{ asset('uploads/categories/32x32') }}/{{ $menu->icon }}"--}}
-{{--                                            alt="img"--}}
-{{--                                            style="--}}
-{{--                                            width: 30px;--}}
-{{--                                            height: 30px;--}}
-{{--                                            border-radius: 50%;--}}
-{{--                                            object-fit: cover;--}}
-{{--                                            margin-right: 6px;--}}
-{{--                                        ">--}}
                                         <span class="text" style="font-size: 15px">{{ $menu->name }}</span>
                                         <span class="arrow"><svg viewBox="0 0 451.8 451.8"><path d="M354.7,225.9c0,8.1-3.1,16.2-9.3,22.4L151.2,442.6c-12.4,12.4-32.4,12.4-44.8,0c-12.4-12.4-12.4-32.4,0-44.7l171.9-171.9 L106.4,54c-12.4-12.4-12.4-32.4,0-44.7c12.4-12.4,32.4-12.4,44.7,0l194.3,194.3C351.6,209.7,354.7,217.8,354.7,225.9z"/></svg></span></a>
                                     <div class="mega-manu">
@@ -144,21 +203,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 category-container">
+            <div class="col-lg-9 category-container d-none d-lg-block">
                 <nav class="main-manu">
-                    <button class="close-btn">
-                        <span></span>
-                        <span></span>
-                    </button>
                     <ul class="category-scroll">
                         <li>
-                            <a href="{{ url('shop') }}" class="{{ isActiveMenu('shop') }}">{{ __('All Products') }}</a>
+                            <a href="{{ url('shop') }}" class="{{ isActiveMenu('shop') }}">
+                                {{ __('All Products') }}
+                            </a>
                         </li>
 
                         @foreach (menubars() as $menubar)
                             <li>
                                 <a href="{{ route('category', $menubar->slug) }}"
-                                   class="{{ isActiveMenu($menubar->slug) }}">{{ $menubar->name }}</a>
+                                   class="{{ isActiveMenu($menubar->slug) }}">
+                                    {{ $menubar->name }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>
@@ -166,6 +225,35 @@
                     <span class="more-indicator text-white" id="scrollRight">&raquo;</span>
                 </nav>
             </div>
+
+            <!-- MOBILE ONLY -->
+            <div class="col-12 d-block d-lg-none">
+                <nav class="mobile-category-menu" id="mobileCategoryMenu">
+
+                    <button type="button" class="mobile-menu-close" id="closeMobileMenu">
+                        &times;
+                    </button>
+
+                    <ul class="mobile-category-list">
+                        <li>
+                            <a href="{{ url('shop') }}" class="{{ isActiveMenu('shop') }}">
+                                {{ __('All Products') }}
+                            </a>
+                        </li>
+
+                        @foreach (menubars() as $menubar)
+                            <li>
+                                <a href="{{ route('category', $menubar->slug) }}"
+                                   class="{{ isActiveMenu($menubar->slug) }}">
+                                    {{ $menubar->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+
+                </nav>
+            </div>
+
         </div>
     </div>
 </div>
@@ -185,6 +273,44 @@
                 behavior: 'smooth'
             });
         });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const menuBtn = document.querySelector('.menu-btn'); // hamburger
+        const manuBar = document.querySelector('.manu-bar');
+        const mobileMenu = document.getElementById('mobileCategoryMenu');
+        const closeBtn = document.getElementById('closeMobileMenu');
+
+        // OPEN mobile menu
+        if (menuBtn) {
+            menuBtn.addEventListener('click', function () {
+                mobileMenu.classList.add('show');
+                document.body.classList.add('overflow-hidden');
+
+                // mark active
+                menuBtn.classList.add('active');
+                manuBar?.classList.add('active');
+            });
+        }
+
+        // CLOSE mobile menu
+        closeBtn.addEventListener('click', closeMenu);
+
+        function closeMenu() {
+            mobileMenu.classList.remove('show');
+            document.body.classList.remove('overflow-hidden');
+
+            // 🔥 REMOVE ACTIVE STATES (THIS WAS MISSING)
+            menuBtn?.classList.remove('active');
+            manuBar?.classList.remove('active');
+
+            // remove active menu links
+            document.querySelectorAll('.mobile-category-list a.active')
+                .forEach(el => el.classList.remove('active'));
+        }
+
     });
 </script>
 <!-- Menu Bar End -->
