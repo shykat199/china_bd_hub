@@ -216,6 +216,9 @@
                                 <li>
                                     <a class="<?php if(Request::is('admin/variants/sizes', 'admin/variants/sizes')): ?> active <?php endif; ?>" href="<?php echo e(route('backend.variant.size')); ?>"> <?php echo e(__('Sizes')); ?> </a>
                                 </li>
+                                <li>
+                                    <a class="<?php if(Request::is('admin/variants/units', 'admin/variants/units')): ?> active <?php endif; ?>" href="<?php echo e(route('backend.variant.units')); ?>"> <?php echo e(__('Units')); ?> </a>
+                                </li>
                             
                         </ul>
                         <!-- Sub Manu End -->

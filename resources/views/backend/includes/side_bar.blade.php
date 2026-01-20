@@ -206,6 +206,9 @@
                                 <li>
                                     <a class="@if (Request::is('admin/variants/sizes', 'admin/variants/sizes')) active @endif" href="{{ route('backend.variant.size') }}"> {{ __('Sizes') }} </a>
                                 </li>
+                                <li>
+                                    <a class="@if (Request::is('admin/variants/units', 'admin/variants/units')) active @endif" href="{{ route('backend.variant.units') }}"> {{ __('Units') }} </a>
+                                </li>
                             {{-- @endif --}}
                         </ul>
                         <!-- Sub Manu End -->

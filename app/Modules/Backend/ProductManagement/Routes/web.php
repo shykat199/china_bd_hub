@@ -40,6 +40,9 @@ Route::group(['prefix' => 'admin', 'as' => 'backend.'], function () {
         Route::post('variants/update-image', 'ProductController@updateVariantImage')->name('variant.update.image');
         Route::delete('variants/delete-variant/{id}', 'ProductController@delete_variant')->name('variant.delete');
 
+        Route::get('variants/units', 'VariantsController@unitsColor')->name('variant.units');
+        Route::post('variants/units/store', 'VariantsController@unitsStore')->name('variant.units.store');
+
         Route::group(['middleware' => ['check_permission']], function () {
             Route::resource('products', 'ProductController')->except(['show']);
             Route::resource('promotional_products', 'PromotionalProductController')->except('show');

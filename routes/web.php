@@ -34,6 +34,9 @@ Route::post('variants/delete/{id}', [\App\Modules\Backend\ProductManagement\Http
 Route::post('variants-size/update/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'sizeUpdate'])->name('variant.size.update');
 Route::post('variants-size/delete/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'sizeDestroy'])->name('variant.size.delete');
 
+Route::post('variants-unites/update/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'unitsUpdate'])->name('variant.unites.update');
+Route::post('variants-unites/delete/{id}', [\App\Modules\Backend\ProductManagement\Http\Controllers\VariantsController::class,'unitsDestroy'])->name('variant.unites.delete');
+
 
 /*  route */
 Route::group(['prefix' => 'admin', 'namespace' => 'Backend', 'as' => 'backend.'], function () {

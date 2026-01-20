@@ -86,6 +86,9 @@
                                         <input type="text" name="barcode" class="form-control" placeholder="Barcode">
                                     </div>
                                 </div>
+                                <?php
+                                    $unites = DB::table('units')->get();
+                                ?>
 
                                 <div class="col-lg-2">
                                     <p><?php echo e(__('Unit')); ?> <span class="text-red">*</span></p>
@@ -93,13 +96,9 @@
                                 <div class="col-lg-4 mb-3">
                                     <select name="unit" class="form-select form-control" required>
                                         <option value=""><?php echo e(__('Select Unit')); ?></option>
-                                        <option value="Kg"><?php echo e(__('Kg')); ?></option>
-                                        <option value="Piece"><?php echo e(__('Piece')); ?></option>
-                                        <option value="Meter"><?php echo e(__('Meter')); ?></option>
-                                        <option value="Litre"><?php echo e(__('Litre')); ?></option>
-                                        <option value="Pound"><?php echo e(__('Pound')); ?></option>
-                                        <option value="Pair"><?php echo e(__('Pair')); ?></option>
-                                        <option value="Set"><?php echo e(__('Set')); ?></option>
+                                        <?php $__currentLoopData = $unites; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e(ucfirst($unit->name)); ?>"><?php echo e(__($unit->name)); ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
                                 <div class="col-lg-2">

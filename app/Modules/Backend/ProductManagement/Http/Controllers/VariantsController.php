@@ -20,6 +20,12 @@ class VariantsController extends Controller
         $colors = DB::table('colors')->orderBy('id', 'desc')->paginate(15);
         return view('productmanagement::variants.colors', compact('colors'));
     }
+
+    public function unitsColor()
+    {
+        $unites = DB::table('units')->orderBy('id', 'desc')->paginate(15);
+        return view('productmanagement::variants.unites', compact('unites'));
+    }
     public function size()
     {
         $sizes = DB::table('sizes')->orderBy('id', 'desc')->paginate(15);
@@ -71,6 +77,18 @@ class VariantsController extends Controller
             ]);
 
             return redirect()->route('backend.variant.size')->with('message', 'Size Added Successfully');
+        }
+    }
+    public function unitsStore(Request $request)
+    {
+        $name = $request->size;
+        if ($name) {
+            DB::table('units')->insert([
+                'name' => $name,
+                'status' => 1,
+            ]);
+
+            return redirect()->route('backend.variant.units')->with('message', 'Unites Added Successfully');
         }
     }
 
@@ -158,6 +176,29 @@ class VariantsController extends Controller
         $color->delete();
 
         return redirect()->back()->with('success', 'Size deleted successfully.');
+    }
+
+    public function unitsUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        DB::table('units')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->name,
+            ]);
+
+        return redirect()->back()->with('success', 'Units updated successfully.');
+    }
+
+    public function unitsDestroy($id)
+    {
+        DB::table('units')
+            ->where('id', $id)->delete();
+
+        return redirect()->back()->with('success', 'Unites deleted successfully.');
     }
 
 }

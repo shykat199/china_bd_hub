@@ -101,6 +101,9 @@
                                         <input type="text" name="barcode" class="form-control" placeholder="Barcode">
                                     </div>
                                 </div>
+                                @php
+                                    $unites = DB::table('units')->get();
+                                @endphp
 
                                 <div class="col-lg-2">
                                     <p>{{ __('Unit') }} <span class="text-red">*</span></p>
@@ -108,13 +111,9 @@
                                 <div class="col-lg-4 mb-3">
                                     <select name="unit" class="form-select form-control" required>
                                         <option value="">{{ __('Select Unit') }}</option>
-                                        <option value="Kg">{{ __('Kg') }}</option>
-                                        <option value="Piece">{{ __('Piece') }}</option>
-                                        <option value="Meter">{{ __('Meter') }}</option>
-                                        <option value="Litre">{{ __('Litre') }}</option>
-                                        <option value="Pound">{{ __('Pound') }}</option>
-                                        <option value="Pair">{{ __('Pair') }}</option>
-                                        <option value="Set">{{ __('Set') }}</option>
+                                        @foreach($unites as $unit)
+                                            <option value="{{ucfirst($unit->name)}}">{{ __($unit->name) }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-lg-2">
