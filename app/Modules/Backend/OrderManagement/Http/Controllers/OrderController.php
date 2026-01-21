@@ -1880,7 +1880,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::with('details.seller', 'orderStatus', 'customer', 'country')->findOrFail($id);
+        $order = Order::with('details.seller','details.product.images', 'orderStatus', 'customer', 'country')->findOrFail($id);
         $website = WebAppearance::findOrFail(1);
         return view('ordermanagement::orders.show', compact('order', 'website'));
     }
