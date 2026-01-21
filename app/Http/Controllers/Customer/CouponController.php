@@ -13,7 +13,8 @@ class CouponController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:customer');
+        $this->middleware('auth:admin,customer');
+
     }
 
     public function index(Request $request)
@@ -49,9 +50,11 @@ class CouponController extends Controller
             $totalShipping = session('totalShipping', 0);
 
             if ($coupon->discount_type == 'percent') {
-                $discount = $subTotal * ($discount / 100);
+                $discount =  ($subTotal + $totalShipping) * ($discount / 100);
+
             }
-        } else {
+        }
+        else {
             $cart = json_decode(Cookie::get('cart'), true);
             $couponProductId = json_decode($coupon->details)->product_id;
 

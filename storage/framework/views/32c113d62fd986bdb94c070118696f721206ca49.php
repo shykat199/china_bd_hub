@@ -184,12 +184,15 @@
                                                         </li>
                                                         <?php $__currentLoopData = $subMenu->subCategories->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subSubMenu): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <li>
-                                                            <a href="<?php echo e(route('category',$subSubMenu->slug??'undefined')); ?>" style="font-size: 15px"><?php echo e($subSubMenu->name); ?></a>
+                                                            <a href="<?php echo e(route('category',$subSubMenu->slug??'undefined')); ?>" style="font-size: 15px">
+                                                                <?php echo e($subSubMenu->name); ?></a>
                                                         </li>
                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         <?php else: ?>
                                                         <li>
-                                                            <a href="<?php echo e(route('category', $subMenu->slug ?? 'undefined')); ?>"><?php echo e($subMenu->name); ?></a>
+                                                            <a href="<?php echo e(route('category', $subMenu->slug ?? 'undefined')); ?>"  style="font-size: 15px">
+                                                                <h6 class="title"><?php echo e($subMenu->name); ?></h6>
+                                                            </a>
                                                         </li>
                                                         <?php endif; ?>
                                                     </ul>

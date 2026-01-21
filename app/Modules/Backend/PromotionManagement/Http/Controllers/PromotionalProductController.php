@@ -3,6 +3,7 @@
 namespace App\Modules\Backend\PromotionManagement\Http\Controllers;
 
 use App\Http\Traits\ResponseMessage;
+use App\Models\Seller\Wholesale;
 use App\Modules\Backend\ProductManagement\Entities\Brand;
 use App\Modules\Backend\ProductManagement\Entities\Category;
 use App\Modules\Backend\ProductManagement\Entities\Product;
@@ -363,4 +364,15 @@ class PromotionalProductController extends Controller
         $promo_product->product->sale_price = $promo_product->promotion_price;
         $promo_product->push();
     }
+
+    public function bulkDelete(Request $request)
+    {
+        Wholesale::whereIn('product_id', $request->ids)->delete();
+        Product::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
 }

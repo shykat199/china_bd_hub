@@ -184,12 +184,15 @@
                                                         </li>
                                                         @foreach($subMenu->subCategories->take(4) as $subSubMenu)
                                                         <li>
-                                                            <a href="{{ route('category',$subSubMenu->slug??'undefined') }}" style="font-size: 15px">{{ $subSubMenu->name }}</a>
+                                                            <a href="{{ route('category',$subSubMenu->slug??'undefined') }}" style="font-size: 15px">
+                                                                {{ $subSubMenu->name }}</a>
                                                         </li>
                                                         @endforeach
                                                         @else
                                                         <li>
-                                                            <a href="{{ route('category', $subMenu->slug ?? 'undefined') }}">{{ $subMenu->name }}</a>
+                                                            <a href="{{ route('category', $subMenu->slug ?? 'undefined') }}"  style="font-size: 15px">
+                                                                <h6 class="title">{{ $subMenu->name }}</h6>
+                                                            </a>
                                                         </li>
                                                         @endif
                                                     </ul>

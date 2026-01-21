@@ -211,7 +211,40 @@ class PaymentController extends Controller
     public function orderSuccess()
     {
         $order = Order::with('items')->findOrFail(session('order_id'));
+
+        $coupon_infos = Cookie::get('coupon_infos')
+            ? json_decode(Cookie::get('coupon_infos'))
+            : null;
+
+        if ($coupon_infos) {
+
+            $details = json_decode($coupon_infos->details, true);
+
+            $minBuy       = $details['min_buy'] ?? 0;
+            $maxDiscount = $details['max_discount'] ?? null;
+
+            $orderTotal = $order->total_price;
+            $discountAmount = 0;
+
+            if ($orderTotal >= $minBuy) {
+
+                if ($coupon_infos->discount_type === 'percent') {
+                    $discountAmount = $orderTotal * ($coupon_infos->discount / 100);
+                } else {
+                    $discountAmount = $coupon_infos->discount;
+                }
+
+                $finalTotal = max(0, $orderTotal - $discountAmount);
+
+                $order->update([
+                    'discount' => $discountAmount,
+                    'total_price'     => $finalTotal,
+                ]);
+            }
+        }
+
         session()->forget('order_id');
-        return view('customer.checkout.payment-success', compact('order'));
+        Cookie::queue(Cookie::forget('coupon_infos'));
+        return view('customer.checkout.payment-success', compact('order', 'coupon_infos'));
     }
 }

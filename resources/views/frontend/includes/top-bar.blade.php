@@ -58,6 +58,21 @@
         font-size: 22px;
     }
 
+    .top-social-link i {
+        font-size: 18px;       /* slightly bigger */
+        font-weight: 700;      /* bolder */
+    }
+
+    /* Facebook */
+    .top-social-link.facebook i {
+        color: #1877F2;        /* official Facebook blue */
+    }
+
+    /* YouTube */
+    .top-social-link.youtube i {
+        color: #FF0000;        /* official YouTube red */
+    }
+
 
 </style>
 <div class="top-bar">
@@ -123,13 +138,13 @@
                 <div class="top-bar-right">
                     <ul class="top-social">
                         <li>
-                            <a href="{{ maanAppearance('facebook_link') }}" class="top-social-link">
+                            <a href="{{ maanAppearance('facebook_link') }}" class="top-social-link facebook">
                                 <i class="fa-brands fa-facebook-f"></i>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ maanAppearance('youtube_link') }}" class="top-social-link">
+                            <a href="{{ maanAppearance('youtube_link') }}" class="top-social-link youtube">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         </li>

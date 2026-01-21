@@ -83,7 +83,7 @@
 
                                     </div>
                                     <div class="col-12 text-center mb-3">
-                                        <button type="submit" class="btn btn-primary px-5 py-2 submit-btn">
+                                        <button type="submit" class="btn btn-primary px-5 py-2 submit-btn text-white">
                                             {{ __('অর্ডার কনফার্ম করুন') }}
                                         </button>
                                     </div>
