@@ -32,3 +32,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Backend', 'middleware' => 'au
 Route::delete('/products/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDelete'])
     ->name('products.bulkDelete');
 
+Route::post('/categories/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteCategory'])
+    ->name('backend.categories.bulk-delete');
+
+Route::post('/brands/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteBrands'])
+    ->name('backend.brands.bulk-delete');
+
+

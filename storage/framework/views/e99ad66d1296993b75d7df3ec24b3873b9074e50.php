@@ -1,11 +1,10 @@
-@extends('backend.layouts.app')
-@section('title','Category - ')
-@push('css')
-    @include('backend.includes.datatable_css')
-@endpush
-@section('content')
+<?php $__env->startSection('title','Category - '); ?>
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
-    @include('productmanagement::includes.product_management')
+    <?php echo $__env->make('productmanagement::includes.product_management', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- Tab Content Start -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="category" role="tabpanel" Area-labelledby="category-tab">
@@ -21,14 +20,14 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </th>
-                                <th scope="col">{{ __('Id') }}</th>
-                                <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('Image') }}</th>
-                                <th scope="col">{{ __('Parent') }}</th>
-                                <th scope="col">{{ __('Display') }}</th>
-                                <th scope="col">{{ __('Sort') }}</th>
-                                <th scope="col">{{ __('Status') }}</th>
-                                <th scope="col">{{ __('Action') }}</th>
+                                <th scope="col"><?php echo e(__('Id')); ?></th>
+                                <th scope="col"><?php echo e(__('Name')); ?></th>
+                                <th scope="col"><?php echo e(__('Image')); ?></th>
+                                <th scope="col"><?php echo e(__('Parent')); ?></th>
+                                <th scope="col"><?php echo e(__('Display')); ?></th>
+                                <th scope="col"><?php echo e(__('Sort')); ?></th>
+                                <th scope="col"><?php echo e(__('Status')); ?></th>
+                                <th scope="col"><?php echo e(__('Action')); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,10 +39,10 @@
         </div>
         <!-- Tab Content End -->
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-    @include('backend.includes.datatable_js')
+<?php $__env->startPush('js'); ?>
+    <?php echo $__env->make('backend.includes.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <script>
         $(function() {
             "use strict";
@@ -54,7 +53,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/category/changeStatus'@elseauth('seller')'/seller/category/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/category/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/category/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'cat_id': cat_id,'field': 'is_active'},
                     success: function(data){
                         notification('success', data.message);
@@ -68,7 +67,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/category/changeStatus'@elseauth('seller')'/seller/category/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/category/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/category/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'cat_id': cat_id,'field': 'show_in_home'},
                     success: function(data){
                         notification('success', data.message);
@@ -80,7 +79,7 @@
                 const table = $('#mDataTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('backend.category.list') }}",
+                    ajax: "<?php echo e(route('backend.category.list')); ?>",
 
                     order: [[0, 'desc']], // sort by id
 
@@ -107,6 +106,7 @@
                         { data: 'action', orderable: false, searchable: false }
                     ]
                 });
+
 
                 $(document).on('change', '#selectAll', function () {
                     $('.rowCheckbox').prop('checked', this.checked);
@@ -135,11 +135,11 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('backend.categories.bulk-delete') }}",
+                        url: "<?php echo e(route('backend.categories.bulk-delete')); ?>",
                         type: "POST",
                         data: {
                             ids: ids,
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function () {
                             $('#selectAll').prop('checked', false);
@@ -154,4 +154,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/ProductManagement/Resources/views/categories/index.blade.php ENDPATH**/ ?>

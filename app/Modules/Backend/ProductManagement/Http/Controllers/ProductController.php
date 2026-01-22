@@ -944,8 +944,24 @@ class ProductController extends Controller
 
     public function productWholesale(Request $request)
     {
-        //$products = Product::where('wholesale_status', 1)->select('id', 'name')->with('wholesales')->latest()->paginate(10);
-        $products = Product::where('wholesale_status', 1)->where('name', 'like', '%' . $request->search . '%')->select('id', 'name')->latest()->paginate(10);
+        $allowedLimits = [10, 25, 50, 100];
+
+        // Works everywhere
+        $limit = (int) $request->get('limit', 10);
+        $limit = in_array($limit, $allowedLimits, true) ? $limit : 10;
+
+        $search = $request->get('search');
+
+        $products = Product::query()
+            ->where('wholesale_status', 1)
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->select('id', 'name')
+            ->latest()
+            ->paginate($limit)
+            ->appends($request->query()); // keeps search & limit in pagination links (older-safe)
+
         return view('productmanagement::wholesales.index', compact('products'));
     }
 

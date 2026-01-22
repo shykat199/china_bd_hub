@@ -1,11 +1,10 @@
-@extends('backend.layouts.app')
-@section('title','Brands - ')
-@push('css')
-    @include('backend.includes.datatable_css')
-@endpush
-@section('content')
+<?php $__env->startSection('title','Brands - '); ?>
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
-    @include('productmanagement::includes.product_management')
+    <?php echo $__env->make('productmanagement::includes.product_management', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- Tab Content Start -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="brand" role="tabpanel" Area-labelledby="brand-tab">
@@ -20,13 +19,13 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </th>
-                                <th scope="col">{{ __('ID') }}</th>
-                                <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('Logo') }}</th>
-                                <th scope="col">{{ __('Slug') }}</th>
-                                <th scope="col">{{ __('Order') }}</th>
-                                <th scope="col">{{ __('Status') }}</th>
-                                <th scope="col">{{ __('Action') }}</th>
+                                <th scope="col"><?php echo e(__('ID')); ?></th>
+                                <th scope="col"><?php echo e(__('Name')); ?></th>
+                                <th scope="col"><?php echo e(__('Logo')); ?></th>
+                                <th scope="col"><?php echo e(__('Slug')); ?></th>
+                                <th scope="col"><?php echo e(__('Order')); ?></th>
+                                <th scope="col"><?php echo e(__('Status')); ?></th>
+                                <th scope="col"><?php echo e(__('Action')); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -38,10 +37,10 @@
         </div>
         <!-- Tab Content End -->
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-    @include('backend.includes.datatable_js')
+<?php $__env->startPush('js'); ?>
+    <?php echo $__env->make('backend.includes.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <script>
         $(function() {
             "use strict";
@@ -51,7 +50,7 @@
                 const table = $('#mDataTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "@auth('admin'){{ route('backend.brand.list') }}@elseauth('seller'){{ route('seller.brand.list') }}@endauth",
+                    ajax: "<?php if(auth()->guard('admin')->check()): ?><?php echo e(route('backend.brand.list')); ?><?php elseif(auth()->guard('seller')->check()): ?><?php echo e(route('seller.brand.list')); ?><?php endif; ?>",
 
                     // 🔥 never sort by checkbox column
                     order: [[1, 'desc']],
@@ -102,11 +101,11 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('backend.brands.bulk-delete') }}",
+                        url: "<?php echo e(route('backend.brands.bulk-delete')); ?>",
                         type: "POST",
                         data: {
                             ids: ids,
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function () {
                             $('#selectAll').prop('checked', false);
@@ -127,7 +126,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/brand/changeStatus'@elseauth('seller')'/seller/brand/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/brand/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/brand/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'brand_id': brand_id,'field': 'is_active'},
                     success: function(data){
                         notification('success', data.message);
@@ -136,4 +135,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/ProductManagement/Resources/views/brands/index.blade.php ENDPATH**/ ?>

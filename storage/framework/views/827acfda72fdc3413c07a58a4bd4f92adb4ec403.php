@@ -1,7 +1,7 @@
 <?php $__env->startSection('title','Customer Login'); ?>
 
 <?php $__env->startSection('content'); ?>
-    <h2><?php echo e(__('Welcome to My Bazar Please Login')); ?></h2>
+    <h2><?php echo e(__('Welcome To China Hub Please Login')); ?></h2>
     <form action="<?php echo e(route('customer.login')); ?>" method="post" >
         <?php echo csrf_field(); ?>
         <div class="input-group">

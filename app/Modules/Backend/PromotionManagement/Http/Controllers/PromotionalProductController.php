@@ -375,4 +375,28 @@ class PromotionalProductController extends Controller
         ]);
     }
 
+    public function bulkDeleteCategory(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer'
+        ]);
+
+        Category::whereIn('id', $request->ids)->delete();
+
+        return response()->json(['success' => true]);
+    }
+    public function bulkDeleteBrands(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer'
+        ]);
+
+        Brand::whereIn('id', $request->ids)->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+
 }
