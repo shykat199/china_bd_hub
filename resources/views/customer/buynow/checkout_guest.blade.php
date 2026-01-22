@@ -243,7 +243,8 @@
 @stop
 
 @push('script')
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
     $("#apply-coupon").click(function() {
         var code = $("#code").val();
         var csrf = "{{ @csrf_token() }}"
@@ -258,9 +259,28 @@
             if (res.status !== 'error') {
                 $('.coupon-infos').html(res.coupon_infos)
                 $("#order-details").html(res.after_coupon);
-                swal("Yes!", res.message, "success");
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end', // bottom-right
+                    icon: 'success',
+                    title: res.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+
             } else {
-                swal("Oops!", res.msg, "error");
+
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end', // bottom-right
+                    icon: 'error',
+                    title: res.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+
             }
         });
     })
@@ -302,7 +322,16 @@
             $("#code").val('');
             $('.coupon-infos').html('');
             $("#order-details").html(res.data);
-            swal("Yes!", res.message, "success");
+
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end', // bottom-right
+                icon: 'success',
+                title: res.message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
         });
     }
 
