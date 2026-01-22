@@ -3,7 +3,7 @@
 @section('title','Customer Login')
 
 @section('content')
-    <h2>{{ __('Welcome to My Bazar Please Login') }}</h2>
+    <h2>{{ __('Welcome To China Hub Please Login') }}</h2>
     <form action="{{ route('customer.login') }}" method="post" >
         @csrf
         <div class="input-group">

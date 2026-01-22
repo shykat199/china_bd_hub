@@ -8,19 +8,19 @@
         @csrf
         <div class="input-group">
             <span><img src="{{ asset('customer/img/icons/User.svg') }}" alt=""></span>
-            <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control" placeholder="First Name">
+            <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control" placeholder="Full Name">
             @if($errors->has('first_name')) <p>{{ $errors->first('first_name') }}</p> @endif
         </div>
-        <div class="input-group">
-            <span><img src="{{ asset('customer/img/icons/User.svg') }}" alt=""></span>
-            <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control" placeholder="Last Name">
-            @if($errors->has('last_name')) <p>{{ $errors->first('last_name') }}</p> @endif
-        </div>
-        <div class="input-group">
-            <span><img src="{{ asset('customer/img/icons/Call.svg') }}" alt=""></span>
-            <input type="number" name="mobile" value="{{ old('mobile') }}" class="form-control" placeholder="Number">
-            @if($errors->has('mobile')) <p>{{ $errors->first('mobile') }}</p> @endif
-        </div>
+{{--        <div class="input-group">--}}
+{{--            <span><img src="{{ asset('customer/img/icons/User.svg') }}" alt=""></span>--}}
+{{--            <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control" placeholder="Last Name">--}}
+{{--            @if($errors->has('last_name')) <p>{{ $errors->first('last_name') }}</p> @endif--}}
+{{--        </div>--}}
+{{--        <div class="input-group">--}}
+{{--            <span><img src="{{ asset('customer/img/icons/Call.svg') }}" alt=""></span>--}}
+{{--            <input type="number" name="mobile" value="{{ old('mobile') }}" class="form-control" placeholder="Number">--}}
+{{--            @if($errors->has('mobile')) <p>{{ $errors->first('mobile') }}</p> @endif--}}
+{{--        </div>--}}
         <div class="input-group">
             <span><img src="{{ asset('customer/img/icons/mail.svg') }}" alt=""></span>
             <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="example@domain.com">

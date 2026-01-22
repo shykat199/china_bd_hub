@@ -22,14 +22,34 @@
                     <div class="content-table mt-0">
 
                         @include('productmanagement::wholesales.wholesale_management')
-                        <div class="col-xxl-3 col-lg-3 col-md-6 mb-2">
+                        <div class="row align-items-center mb-3">
+                            <div class="col-xxl-3 col-lg-3 col-md-6 mb-2">
+                                <form action="{{ route('backend.products.wholesale') }}" method="GET" id="searchForm">
+                                    <input type="text"
+                                           class="form-control"
+                                           name="search"
+                                           value="{{ request('search') }}"
+                                           placeholder="Search">
+                                </form>
+                            </div>
 
-                            <form action="{{route('backend.products.wholesale')}}" method="GET">
-                                @csrf
-                                <div class="form-group col" id="tableSearchDiv" >
-                                    <input type="text" class="form-control " id="search" name="search" placeholder="search">
-                                </div>
-                            </form>
+                            <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
+                                <form action="{{ route('backend.products.wholesale') }}" method="GET" id="limitForm">
+                                    {{-- keep search query --}}
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+
+                                    <select name="limit"
+                                            class="form-select"
+                                            onchange="this.form.submit()">
+                                        @foreach([10, 25, 50, 100] as $limit)
+                                            <option value="{{ $limit }}"
+                                                {{ request('limit', 10) == $limit ? 'selected' : '' }}>
+                                                {{ $limit }} per page
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
                         </div>
                         <table id="table_data" class="table p-table w-100 ">
                             <thead>
