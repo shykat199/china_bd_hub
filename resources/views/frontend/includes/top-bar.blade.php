@@ -73,6 +73,10 @@
         color: #FF0000;        /* official YouTube red */
     }
 
+    .side-mega-manu a {
+        font-weight: 700;
+    }
+
 
 </style>
 <div class="top-bar">
