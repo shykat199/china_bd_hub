@@ -224,7 +224,7 @@
 
                                                 @php
                                                     $imagePath = $matchedStock->variant_image ?? null;
-                                                    $fullPath  = public_path('uploads/products/galleries/' . $imagePath);
+                                                    $fullPath  = base_path('uploads/products/galleries/' . $imagePath);
                                                 @endphp
                                                 <tr data-product="{{$detail->product_id}}">
                                                     <td scope="row"> {{$detail->product->name??''}}

@@ -193,6 +193,73 @@
         }
 
     </style>
+
+    <style>
+        .product-size {
+            display: inline-block;
+        }
+
+        /* Base box */
+        .product-color {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            border: 1.5px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        /* Color swatch */
+        .product-color:not(.text-box) {
+            width: 36px;
+        }
+
+        /* Text box (Laravel controls length) */
+        .product-color.text-box {
+            padding: 0 10px;
+            background: #fff;
+            color: #333;
+            width: auto;          /* ✅ auto-expand */
+            min-width: 100px;      /* ✅ readable */
+        }
+
+        /* Hover */
+        .product-size:hover .product-color {
+            border-color: #000;
+        }
+
+        /* Selected */
+        .product-size input:checked + .product-color {
+            border: 2px solid #000;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+        }
+        .product-size-wrap .product-size input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+
+            /* 🔑 kill native + framework styles */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* 🔥 ALSO REMOVE ANY PSEUDO ELEMENTS */
+        .product-size-wrap .product-size::before,
+        .product-size-wrap .product-size::after,
+        .product-size-wrap .product-size input[type="radio"]::before,
+        .product-size-wrap .product-size input[type="radio"]::after {
+            content: none !important;
+            display: none !important;
+        }
+
+
+    </style>
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -328,8 +395,9 @@
                             </div>
                         </div>
 
-                        <?php if(!empty($product->productstock) && $product->productstock->count() > 0): ?>
 
+                        <?php if(!empty($product->productstock) && $product->productstock->count() > 0): ?>
+                            <?php if($product->productstock[0]->color ?? false): ?>
                                 <div class="product-size-wrap product-size-v2">
                                     <h6>Color:</h6>
                                     <ul>
@@ -337,16 +405,28 @@
                                             <?php if($productstock->color->name ?? false): ?>
                                                 <li>
                                                     <label class="product-size">
-                                                        <input name="color"  value="<?php echo e($productstock->color->name); ?>" type="radio" data-color_qty="<?php echo e($productstock->quantities); ?>" data-color_id="<?php echo e($productstock->color_id); ?>" class="color-vAreation" data-variantimage="<?php echo e($productstock->variant_image); ?>">
-                                                        <span class="checkmark product-color" style="background-color: <?php echo e($productstock->color->hex); ?>"></span>
+                                                        <input name="color" value="<?php echo e($productstock->color->name); ?>" type="radio" data-color_qty="<?php echo e($productstock->quantities); ?>" data-color_id="<?php echo e($productstock->color_id); ?>" class="color-vAreation" data-variantimage="<?php echo e($productstock->variant_image); ?>">
+
+                                                        <?php if(!empty($productstock->color->hex)): ?>
+                                                            <span
+                                                                class="checkmark product-color"
+                                                                style="background-color: <?php echo e($productstock->color->hex); ?>"
+                                                                title="<?php echo e($productstock->color->name); ?>">
+                                                            </span>
+                                                        <?php else: ?>
+                                                            <span class=" product-color text-box" title="<?php echo e($productstock->color->name); ?>">
+                                                                <?php echo e(\Illuminate\Support\Str::limit($productstock->color->name,10,'...')); ?>
+
+                                                            </span>
+                                                        <?php endif; ?>
                                                     </label>
                                                 </li>
                                             <?php endif; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-
-
+                            <?php endif; ?>
+                            <?php if($product->productstock[0]->size ?? false): ?>
                                 <div class="product-size-wrap product-size-v2">
                                     <h6>Size:</h6>
                                     <ul>
@@ -362,7 +442,7 @@
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-
+                            <?php endif; ?>
                         <?php endif; ?>
                         <div class="new-quantity-area">
                             

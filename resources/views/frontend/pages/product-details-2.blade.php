@@ -195,6 +195,52 @@
         }
 
     </style>
+
+    <style>
+        .product-size {
+            display: inline-block;
+        }
+
+        /* Base box */
+        .product-color {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            border: 1.5px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        /* Color swatch */
+        .product-color:not(.text-box) {
+            width: 36px;
+        }
+
+        /* Text box (Laravel controls length) */
+        .product-color.text-box {
+            padding: 0 10px;
+            background: #fff;
+            color: #333;
+            width: auto;          /* ✅ auto-expand */
+            min-width: 100px;      /* ✅ readable */
+        }
+
+        /* Hover */
+        .product-size:hover .product-color {
+            border-color: #000;
+        }
+
+        /* Selected */
+        .product-size input:checked + .product-color {
+            border: 2px solid #000;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -325,9 +371,10 @@
                                 </span>
                             </div>
                         </div>
+{{--                        @dd($product->productstock)--}}
 
                         @if (!empty($product->productstock) && $product->productstock->count() > 0)
-{{--                            @if ($product->productstock[0]->color ?? false)--}}
+                            @if ($product->productstock[0]->color ?? false)
                                 <div class="product-size-wrap product-size-v2">
                                     <h6>Color:</h6>
                                     <ul>
@@ -335,16 +382,27 @@
                                             @if ($productstock->color->name ?? false)
                                                 <li>
                                                     <label class="product-size">
-                                                        <input name="color" {{-- {{ $loop->first ? 'checked':'' }} --}} value="{{ $productstock->color->name }}" type="radio" data-color_qty="{{ $productstock->quantities }}" data-color_id="{{ $productstock->color_id }}" class="color-vAreation" data-variantimage="{{ $productstock->variant_image }}">
-                                                        <span class="checkmark product-color" style="background-color: {{ $productstock->color->hex }}"></span>
+                                                        <input name="color" value="{{ $productstock->color->name }}" type="radio" data-color_qty="{{ $productstock->quantities }}" data-color_id="{{ $productstock->color_id }}" class="color-vAreation" data-variantimage="{{ $productstock->variant_image }}">
+
+                                                        @if(!empty($productstock->color->hex))
+                                                            <span
+                                                                class="checkmark product-color"
+                                                                style="background-color: {{ $productstock->color->hex }}"
+                                                                title="{{ $productstock->color->name }}">
+                                                            </span>
+                                                        @else
+                                                            <span class=" product-color text-box" title="{{ $productstock->color->name }}">
+                                                                {{ \Illuminate\Support\Str::limit($productstock->color->name,10,'...') }}
+                                                            </span>
+                                                        @endif
                                                     </label>
                                                 </li>
                                             @endif
                                         @endforeach
                                     </ul>
                                 </div>
-{{--                            @endif--}}
-{{--                            @if ($product->productstock[0]->size ?? false)--}}
+                            @endif
+                            @if ($product->productstock[0]->size ?? false)
                                 <div class="product-size-wrap product-size-v2">
                                     <h6>Size:</h6>
                                     <ul>
@@ -360,7 +418,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-{{--                            @endif--}}
+                            @endif
                         @endif
                         <div class="new-quantity-area">
                             {{-- <div class="new-quantity-item">

@@ -214,7 +214,7 @@
 
                                                 <?php
                                                     $imagePath = $matchedStock->variant_image ?? null;
-                                                    $fullPath  = public_path('uploads/products/galleries/' . $imagePath);
+                                                    $fullPath  = base_path('uploads/products/galleries/' . $imagePath);
                                                 ?>
                                                 <tr data-product="<?php echo e($detail->product_id); ?>">
                                                     <td scope="row"> <?php echo e($detail->product->name??''); ?>
