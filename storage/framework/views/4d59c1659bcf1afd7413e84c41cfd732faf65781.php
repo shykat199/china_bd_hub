@@ -6,6 +6,26 @@
             <div class="card">
                 <div class="card-body">
                     <h5><?php echo e(__('Manage Stock')); ?></h5>
+                    <div class="row align-items-center mb-3">
+
+                        <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
+                            <form action="<?php echo e(route('backend.products.wholesale')); ?>" method="GET" id="limitForm">
+                                
+                                <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
+
+                                <select name="limit"
+                                        class="form-select"
+                                        onchange="this.form.submit()">
+                                    <?php $__currentLoopData = [10, 25, 50, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $limit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($limit); ?>"
+                                            <?php echo e(request('limit', 10) == $limit ? 'selected' : ''); ?>>
+                                            <?php echo e($limit); ?> per page
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
                     <table class="table p-0 p-table table-bordered table-striped table-hover">
                         <thead class="bg-secondary text-light">
                             <tr>

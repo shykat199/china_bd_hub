@@ -7,6 +7,26 @@
             <div class="card">
                 <div class="card-body">
                     <h5>{{ __('Manage Stock') }}</h5>
+                    <div class="row align-items-center mb-3">
+
+                        <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
+                            <form action="{{ route('backend.products.wholesale') }}" method="GET" id="limitForm">
+                                {{-- keep search query --}}
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+
+                                <select name="limit"
+                                        class="form-select"
+                                        onchange="this.form.submit()">
+                                    @foreach([10, 25, 50, 100] as $limit)
+                                        <option value="{{ $limit }}"
+                                            {{ request('limit', 10) == $limit ? 'selected' : '' }}>
+                                            {{ $limit }} per page
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+                    </div>
                     <table class="table p-0 p-table table-bordered table-striped table-hover">
                         <thead class="bg-secondary text-light">
                             <tr>
