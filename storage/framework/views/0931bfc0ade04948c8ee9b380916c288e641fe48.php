@@ -1,11 +1,10 @@
-@extends('backend.layouts.app')
-@section('title','Email Subscriber - ')
-@push('css')
-    @include('backend.includes.datatable_css')
-@endpush
-@section('content')
+<?php $__env->startSection('title','Email Subscriber - '); ?>
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
-    @include('customermanagement::nav')
+    <?php echo $__env->make('customermanagement::nav', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- Tab Content Start -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="all-customers" Area-labelledby="all-customers-tab">
@@ -21,8 +20,8 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </th>
-                                <th scope="col">{{__('Email')}}</th>
-                                <th scope="col">{{__('Status')}}</th>
+                                <th scope="col"><?php echo e(__('Email')); ?></th>
+                                <th scope="col"><?php echo e(__('Status')); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -35,10 +34,10 @@
         </div>
         <!-- Tab Content End -->
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-    @include('backend.includes.datatable_js')
+<?php $__env->startPush('js'); ?>
+    <?php echo $__env->make('backend.includes.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <script>
         "use strict";
 
@@ -48,7 +47,7 @@
                 const table = $('#mDataTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "@auth('admin'){{route('backend.email_subscriber.list')}}@elseauth('seller'){{route('seller.email_subscriber.list')}}@endauth",
+                    ajax: "<?php if(auth()->guard('admin')->check()): ?><?php echo e(route('backend.email_subscriber.list')); ?><?php elseif(auth()->guard('seller')->check()): ?><?php echo e(route('seller.email_subscriber.list')); ?><?php endif; ?>",
 
                     order: [[0, 'desc']],
 
@@ -97,11 +96,11 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('backend.subscriberBulkDelete') }}",
+                        url: "<?php echo e(route('backend.subscriberBulkDelete')); ?>",
                         type: "POST",
                         data: {
                             ids: ids,
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function () {
                             $('#selectAll').prop('checked', false);
@@ -122,7 +121,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/email_subscriber/changeStatus'@elseauth('seller')'/seller/email_subscriber/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/email_subscriber/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/email_subscriber/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'id': id,'field': 'opt_out'},
                     success: function(data){
                         notification('success', data.message);
@@ -131,4 +130,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/CustomerManagement/Resources/views/email_subscriber/index.blade.php ENDPATH**/ ?>

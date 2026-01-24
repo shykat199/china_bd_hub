@@ -107,7 +107,6 @@
                     ]
                 });
 
-
                 $(document).on('change', '#selectAll', function () {
                     $('.rowCheckbox').prop('checked', this.checked);
                 });

@@ -70,6 +70,7 @@ class EmailSubscriberController extends Controller
                 $checked = 'checked';
 
             $data_arr[] = array(
+                "id" => $record->id,
                 "email" => $record->email,
                 "opt_out" => '<div class="form-switch"><input class="form-check-input status" type="checkbox"  data-id="' . $record->id . '"' . $checked . '></div>',
 
@@ -149,5 +150,17 @@ class EmailSubscriberController extends Controller
         } else {
             return back()->withInput()->with($this->not_found_message);
         }
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer'
+        ]);
+
+        EmailSubscriber::whereIn('id', $request->ids)->delete();
+
+        return response()->json(['success' => true]);
     }
 }

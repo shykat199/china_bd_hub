@@ -5,6 +5,7 @@ namespace App\Modules\Backend\CustomerManagement\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ResponseMessage;
 use App\Mail\InformCustomer;
+use App\Models\Frontend\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -85,6 +86,7 @@ class CustomerController extends Controller
             $data_arr[] = array(
                 "last_name" => $record->full_name(),
                 "email" => $record->email,
+                "id" => $record->id,
                 "mobile" => $record->mobile,
                 "gender" => $gender,
                 "is_active" => '<div class="form-switch"><input class="form-check-input status" type="checkbox"  data-id="' . $record->id . '"' . $checked . '></div>',
@@ -397,6 +399,7 @@ class CustomerController extends Controller
                 $gender = 'Other';
             $data_arr[] = array(
                 "last_name" => $record->full_name(),
+                "id" => $record->id,
                 "email" => $record->email,
                 "mobile" => $record->mobile,
                 "gender" => $gender,
@@ -441,6 +444,18 @@ class CustomerController extends Controller
         );
 
         return json_encode($response);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer'
+        ]);
+
+        User::whereIn('id', $request->ids)->delete();
+
+        return response()->json(['success' => true]);
     }
 
 }

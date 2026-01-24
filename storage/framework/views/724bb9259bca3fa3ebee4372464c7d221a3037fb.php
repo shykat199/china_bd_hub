@@ -238,27 +238,6 @@
             border: 2px solid #000;
             box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
         }
-        .product-size-wrap .product-size input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-
-            /* 🔑 kill native + framework styles */
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-
-        /* 🔥 ALSO REMOVE ANY PSEUDO ELEMENTS */
-        .product-size-wrap .product-size::before,
-        .product-size-wrap .product-size::after,
-        .product-size-wrap .product-size input[type="radio"]::before,
-        .product-size-wrap .product-size input[type="radio"]::after {
-            content: none !important;
-            display: none !important;
-        }
-
-
     </style>
 <?php $__env->stopPush(); ?>
 

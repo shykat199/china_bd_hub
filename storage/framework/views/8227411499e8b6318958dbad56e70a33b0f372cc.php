@@ -229,15 +229,26 @@
                                                                 alt="Variant Image"
                                                             >
                                                         <?php else: ?>
-                                                            <span>No image</span>
+                                                           <?php
+                                                            $productImagePath = $detail->product->images[0]->image ?? null ;
+                                                           ?>
+
+                                                            <?php if($productImagePath): ?>
+                                                                    <img src="<?php echo e(asset('uploads/products/galleries/' . $productImagePath)); ?>"
+                                                                        width="60"
+                                                                        alt="Variant Image"
+                                                                    >
+                                                                <?php else: ?>
+                                                                    <span>No image</span>
+                                                            <?php endif; ?>
                                                         <?php endif; ?>
                                                     </td>
                                                     
-                                                    <td><?php echo e($detail->color??''); ?></td>
-                                                    <td><?php echo e($detail->size??''); ?></td>
-                                                    <td><?php echo e($detail->qty??''); ?></td>
-                                                    <td><?php echo e($detail->sale_price??''); ?></td>
-                                                    <td><?php echo e($detail->total_price??''); ?></td>
+                                                    <td><?php echo e($detail->color??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->size??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->qty??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->sale_price??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->total_price??'N/A'); ?></td>
                                                     <td>
                                                         <div class="invoice-title">
                                                             <h6>
@@ -282,7 +293,7 @@
                                                 :<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
                                             <li>-------------------------------------------</li>
                                             <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
-                                            <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
+                                            <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
                                             <li>-------------------------------------------</li>
                                             <li><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
                                         </ul>
@@ -457,7 +468,7 @@
                                     <li><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
                                     <li>-------------------------------------------</li>
                                     <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
-                                    <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
+                                    <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
                                     
                                     <li>-------------------------------------------</li>
                                     <li><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
@@ -632,7 +643,7 @@
             <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
             <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
             <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;"><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
         </ul>

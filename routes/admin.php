@@ -38,4 +38,14 @@ Route::post('/categories/bulk-delete', [\App\Modules\Backend\PromotionManagement
 Route::post('/brands/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteBrands'])
     ->name('backend.brands.bulk-delete');
 
+Route::post('email_subscriber/bulk-delete', [\App\Modules\Backend\CustomerManagement\Http\Controllers\EmailSubscriberController::class, 'bulkDelete'])
+    ->name('backend.subscriberBulkDelete');
 
+Route::post('email_subscriber/bulk-delete', [\App\Modules\Backend\CustomerManagement\Http\Controllers\EmailSubscriberController::class, 'bulkDelete'])
+    ->name('backend.subscriberBulkDelete');
+
+Route::post('suspend-user/bulk-delete', [\App\Modules\Backend\CustomerManagement\Http\Controllers\CustomerController::class, 'bulkDelete'])
+    ->name('backend.suspendUserBulkDelete');
+
+Route::post('bulk-delete-stock', [\App\Http\Controllers\Backend\StockController::class, 'bulkDelete'])
+    ->name('backend.stockBulkDelete');

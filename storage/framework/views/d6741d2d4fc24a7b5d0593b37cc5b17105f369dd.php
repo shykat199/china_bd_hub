@@ -1,11 +1,10 @@
-@extends('backend.layouts.app')
-@section('title','Customer - ')
-@push('css')
-    @include('backend.includes.datatable_css')
-@endpush
-@section('content')
+<?php $__env->startSection('title','Customer - '); ?>
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
-    @include('customermanagement::nav')
+    <?php echo $__env->make('customermanagement::nav', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- Tab Content Start -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="all-customers" Area-labelledby="all-customers-tab">
@@ -20,13 +19,13 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </th>
-                                <th scope="col">{{__('Name')}}</th>
-                                <th scope="col">{{__('Email')}}</th>
-                                <th scope="col">{{__('Phone Number')}}</th>
-                                <th scope="col">{{__('Gender')}}</th>
-                                <th scope="col">{{__('Status')}}</th>
-                                <th scope="col">{{__('Suspended')}}</th>
-                                <th scope="col">{{__('Action')}}</th>
+                                <th scope="col"><?php echo e(__('Name')); ?></th>
+                                <th scope="col"><?php echo e(__('Email')); ?></th>
+                                <th scope="col"><?php echo e(__('Phone Number')); ?></th>
+                                <th scope="col"><?php echo e(__('Gender')); ?></th>
+                                <th scope="col"><?php echo e(__('Status')); ?></th>
+                                <th scope="col"><?php echo e(__('Suspended')); ?></th>
+                                <th scope="col"><?php echo e(__('Action')); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -43,7 +42,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{__('New message')}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"><?php echo e(__('New message')); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" Area-label="Close"></button>
                     </div>
                     <form id="messageForm">
@@ -51,27 +50,27 @@
                             <input type="hidden" name="email" id="email" value="">
                             <input type="hidden" name="name"  id="name" value="">
                             <div class="mb-3 form-group ">
-                                <label for="message-text" class="col-form-label">{{__('Subject')}}:</label>
+                                <label for="message-text" class="col-form-label"><?php echo e(__('Subject')); ?>:</label>
                                 <input name="subject" class="form-control" type="text" required>
                             </div>
                             <div class="mb-3 form-group ">
-                                <label for="message-text" class="col-form-label">{{__('Message')}}:</label>
+                                <label for="message-text" class="col-form-label"><?php echo e(__('Message')); ?>:</label>
                                 <textarea name="message" rows="3" class="form-control" required id="message-text"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Close')}}</button>
-                            <button type="submit" id="submitMessageForm" class="btn btn-primary">{{__('Send message')}}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo e(__('Close')); ?></button>
+                            <button type="submit" id="submitMessageForm" class="btn btn-primary"><?php echo e(__('Send message')); ?></button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-    @include('backend.includes.datatable_js')
+<?php $__env->startPush('js'); ?>
+    <?php echo $__env->make('backend.includes.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <script>
         "use strict";
 
@@ -80,7 +79,7 @@
                 const table = $('#mDataTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "@auth('admin'){{route('backend.customer.list')}}@elseauth('seller'){{route('seller.customer.list')}}@endauth",
+                    ajax: "<?php if(auth()->guard('admin')->check()): ?><?php echo e(route('backend.customer.list')); ?><?php elseif(auth()->guard('seller')->check()): ?><?php echo e(route('seller.customer.list')); ?><?php endif; ?>",
 
                     order: [[0, 'desc']],
 
@@ -134,11 +133,11 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('backend.suspendUserBulkDelete') }}",
+                        url: "<?php echo e(route('backend.suspendUserBulkDelete')); ?>",
                         type: "POST",
                         data: {
                             ids: ids,
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function () {
                             $('#selectAll').prop('checked', false);
@@ -159,7 +158,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/customer/changeStatus'@elseauth('seller')'/seller/customer/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/customer/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/customer/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'id': id,'field': 'is_active'},
                     success: function(data){
                         notification('success', data.message);
@@ -173,7 +172,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/customer/changeStatus'@elseauth('seller')'/seller/customer/changeStatus'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/customer/changeStatus'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/customer/changeStatus'<?php endif; ?>,
                     data: {'status': status, 'id': id,'field': 'is_suspended'},
                     success: function(data){
                         notification('success', data.message);
@@ -198,7 +197,7 @@
                 $.ajax({
                     type: "get",
                     dataType: "json",
-                    url: public_path + @auth('admin')'/admin/customer/sendMail'@elseauth('seller')'/seller/customer/sendMail'@endauth,
+                    url: public_path + <?php if(auth()->guard('admin')->check()): ?>'/admin/customer/sendMail'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/customer/sendMail'<?php endif; ?>,
                     data: {'subject':subject,'name': name, 'email': email, 'message': message},
                     success: function (data) {
                         $('#exampleModal').modal('hide');
@@ -208,4 +207,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/CustomerManagement/Resources/views/customers/index.blade.php ENDPATH**/ ?>

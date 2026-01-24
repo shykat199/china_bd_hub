@@ -15,6 +15,12 @@
                         <table id="mDataTable" class="table p-table">
                             <thead>
                             <tr>
+                                <th>
+                                    <input type="checkbox" id="selectAll">
+                                    <button type="button" id="bulkDeleteBtn" class="btn btn-sm text-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </th>
                                 <th scope="col">{{__('Name')}}</th>
                                 <th scope="col">{{__('Email')}}</th>
                                 <th scope="col">{{__('Phone Number')}}</th>
@@ -65,17 +71,33 @@
 
 @push('js')
     @include('backend.includes.datatable_js')
+
     <script>
 
         $(function () {
             "use strict";
 
             $(document).ready(function(){
-                // DataTable
-                var table = $('#mDataTable');
-                table.DataTable({
+                const table = $('#mDataTable').DataTable({
+                    processing: true,
+                    serverSide: true,
                     ajax: "{{route('backend.suspended_customer.list')}}",
+
+                    order: [[0, 'desc']],
+
                     columns: [
+                        {
+                            data: 'id',
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                return `
+                                <input type="checkbox"
+                                       class="rowCheckbox"
+                                       value="${data}">
+                            `;
+                            }
+                        },
                         { data: 'last_name' },
                         { data: 'email'},
                         { data: 'mobile' },
@@ -83,6 +105,49 @@
                         { data: 'is_suspended' },
                         { data: 'action',searchable:false,sortable:false },
                     ]
+                });
+
+                $(document).on('change', '#selectAll', function () {
+                    $('.rowCheckbox').prop('checked', this.checked);
+                });
+
+                $(document).on('change', '.rowCheckbox', function () {
+                    if (!this.checked) {
+                        $('#selectAll').prop('checked', false);
+                    }
+                });
+
+                $('#bulkDeleteBtn').on('click', function () {
+                    let ids = [];
+
+                    $('.rowCheckbox:checked').each(function () {
+                        ids.push($(this).val());
+                    });
+
+                    if (ids.length === 0) {
+                        alert('Please select at least one user.');
+                        return;
+                    }
+
+                    if (!confirm('Are you sure you want to delete selected user?')) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('backend.categories.bulk-delete') }}",
+                        type: "POST",
+                        data: {
+                            ids: ids,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function () {
+                            $('#selectAll').prop('checked', false);
+                            table.ajax.reload(null, false); // reload without page reset
+                        },
+                        error: function () {
+                            alert('Something went wrong.');
+                        }
+                    });
                 });
 
             });

@@ -55,7 +55,7 @@
                             <thead>
                             <tr>
                                 <th>
-                                    <input type="checkbox" id="selectAllWholesales">
+                                    <input type="checkbox" id="selectAll">
                                     <button type="button" id="bulkDeleteBtn" class="btn btn-sm text-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>

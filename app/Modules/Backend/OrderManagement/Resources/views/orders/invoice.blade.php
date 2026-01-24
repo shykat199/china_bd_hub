@@ -97,7 +97,7 @@
             <li>{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
             <li>-------------------------------------------</li>
             <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-            <li>{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
+            <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
             {{--  <li>{{__('Vat')}}:<span>{{ $order->totalVat() }}</span></li>  --}}
             <li>-------------------------------------------</li>
             <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>

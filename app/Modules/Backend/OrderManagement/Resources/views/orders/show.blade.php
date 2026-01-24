@@ -238,15 +238,26 @@
                                                                 alt="Variant Image"
                                                             >
                                                         @else
-                                                            <span>No image</span>
+                                                           @php
+                                                            $productImagePath = $detail->product->images[0]->image ?? null ;
+                                                           @endphp
+
+                                                            @if($productImagePath)
+                                                                    <img src="{{ asset('uploads/products/galleries/' . $productImagePath) }}"
+                                                                        width="60"
+                                                                        alt="Variant Image"
+                                                                    >
+                                                                @else
+                                                                    <span>No image</span>
+                                                            @endif
                                                         @endif
                                                     </td>
                                                     {{--  <td>{{$detail->courier??''}}</td>  --}}
-                                                    <td>{{$detail->color??''}}</td>
-                                                    <td>{{$detail->size??''}}</td>
-                                                    <td>{{$detail->qty??''}}</td>
-                                                    <td>{{$detail->sale_price??''}}</td>
-                                                    <td>{{$detail->total_price??''}}</td>
+                                                    <td>{{$detail->color??'N/A'}}</td>
+                                                    <td>{{$detail->size??'N/A'}}</td>
+                                                    <td>{{$detail->qty??'N/A'}}</td>
+                                                    <td>{{$detail->sale_price??'N/A'}}</td>
+                                                    <td>{{$detail->total_price??'N/A'}}</td>
                                                     <td>
                                                         <div class="invoice-title">
                                                             <h6>
@@ -289,7 +300,7 @@
                                                 :<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
                                             <li>-------------------------------------------</li>
                                             <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-                                            <li>{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
+                                            <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
                                             <li>-------------------------------------------</li>
                                             <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
                                         </ul>
@@ -459,7 +470,7 @@
                                     <li>{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
                                     <li>-------------------------------------------</li>
                                     <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-                                    <li>{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
+                                    <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
                                     {{--  <li>{{__('Vat')}}:<span>{{ $order->totalVat() }}</span></li>  --}}
                                     <li>-------------------------------------------</li>
                                     <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
@@ -634,7 +645,7 @@
             <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
             <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
             <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;">{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
         </ul>
