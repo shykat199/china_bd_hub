@@ -70,6 +70,17 @@
 
     <!-- product zoom css -->
     <link rel="stylesheet" href="{{ asset('frontend/zoom-images-carousel/zoom-custom.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        /* FORCE SweetAlert toast width */
+        .swal2-container.swal2-top-end > .swal2-popup {
+            width: auto !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 6px !important;
+        }
+    </style>
     <style>
         .my-toast {
             padding: 12px !important;
@@ -148,7 +159,39 @@
 <script src="{{ asset('frontend/zoom-images-carousel/zoom-custom.js') }}"></script>
 <!-- product zoom js -->
 <script src="{{ asset('frontend/js/index.js') }}"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if ("{{ session('success') }}") {
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+
+                    showClass: {
+                        popup: 'swal2-toast-show'
+                    },
+                    hideClass: {
+                        popup: 'swal2-toast-hide'
+                    },
+
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    width: 'auto'
+                });
+
+            }
+
+        });
+    </script>
+@endif
 
 <script>
     "use strict";
@@ -657,21 +700,36 @@
 </script>
 
 
-@if(Session::has('success'))
+@if (session('success'))
     <script>
-        swal("{{ __('Subscribed!') }}","{{ Session::get('success') }}","success");
+        Swal.fire({
+            icon: 'success',
+            title: "{{ __('Subscribed!') }}",
+            text: "{{ session('success') }}",
+            confirmButtonText: 'OK'
+        });
     </script>
 @endif
 
-@if(Session::has('error'))
+@if (session('error'))
     <script>
-        swal('✘' +"  "+ "{{ Session::get('error') }}","error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "{{ session('error') }}",
+            confirmButtonText: 'OK'
+        });
     </script>
 @endif
 
-@if($errors->has('email'))
+@if ($errors->has('email'))
     <script>
-        swal("Error","{{ $errors->first('email') }}","error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "{{ $errors->first('email') }}",
+            confirmButtonText: 'OK'
+        });
     </script>
 @endif
 

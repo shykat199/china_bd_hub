@@ -6,17 +6,17 @@
         <?php echo csrf_field(); ?>
         <div class="input-group">
             <span><img src="<?php echo e(asset('customer/img/icons/mail.svg')); ?>" alt=""></span>
-            <input type="text" name="username" value="customer@maantheme.com" class="form-control" placeholder="User Name/E-mail">
+            <input type="text" name="username" class="form-control" placeholder="User Mobile/E-mail">
             <?php if($errors->has('email')): ?> <p><?php echo e($errors->first('email')); ?></p> <?php endif; ?>
-        <?php if($errors->has('username')): ?> <p><?php echo e($errors->first('username')); ?></p> <?php endif; ?>
+        <?php if($errors->has('mobile')): ?> <p><?php echo e($errors->first('mobile')); ?></p> <?php endif; ?>
         </div>
         <div class="input-group">
             <span><img src="<?php echo e(asset('customer/img/icons/Lock.svg')); ?>" alt=""></span>
             <span class="hide-pass">
-                            <img src="<?php echo e(asset('customer/img/icons/Hide.svg')); ?>" alt="">
-                            <img src="<?php echo e(asset('customer/img/icons/show.svg')); ?>" alt="">
-                        </span>
-            <input type="password" id="myPass" name="password" class="form-control" placeholder="Password" value="Pa$$w0rd!">
+                <img src="<?php echo e(asset('customer/img/icons/Hide.svg')); ?>" alt="">
+                <img src="<?php echo e(asset('customer/img/icons/show.svg')); ?>" alt="">
+            </span>
+            <input type="password" id="myPass" name="password" class="form-control" placeholder="Password">
             <?php if($errors->has('password')): ?> <p><?php echo e($errors->first('password')); ?></p> <?php endif; ?>
             <?php if($errors->has('current_password')): ?> <p><?php echo e($errors->first('current_password')); ?></p> <?php endif; ?>
         </div>

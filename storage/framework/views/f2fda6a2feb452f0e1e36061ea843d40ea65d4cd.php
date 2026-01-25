@@ -56,6 +56,17 @@
     <link rel="stylesheet" href="<?php echo e(asset('frontend/css/style.css')); ?>">
     <!-- Responsive -->
     <link rel="stylesheet" href="<?php echo e(asset('frontend/css/responsive.css')); ?>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        /* FORCE SweetAlert toast width */
+        .swal2-container.swal2-top-end > .swal2-popup {
+            width: auto !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 6px !important;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -114,6 +125,40 @@
 
 <!-- Form Pass -->
 <script src="<?php echo e(asset('customer/js/form-pass.js')); ?>"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if(session('success')): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if ("<?php echo e(session('success')); ?>") {
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: "<?php echo e(session('success')); ?>",
+
+                    showClass: {
+                        popup: 'swal2-toast-show'
+                    },
+                    hideClass: {
+                        popup: 'swal2-toast-hide'
+                    },
+
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    width: 'auto'
+                });
+
+            }
+
+        });
+    </script>
+<?php endif; ?>
+
 
 <?php echo $__env->yieldContent('script'); ?>
 

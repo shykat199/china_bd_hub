@@ -70,6 +70,17 @@
 
     <!-- product zoom css -->
     <link rel="stylesheet" href="<?php echo e(asset('frontend/zoom-images-carousel/zoom-custom.css')); ?>">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        /* FORCE SweetAlert toast width */
+        .swal2-container.swal2-top-end > .swal2-popup {
+            width: auto !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 6px !important;
+        }
+    </style>
     <style>
         .my-toast {
             padding: 12px !important;
@@ -148,7 +159,39 @@
 <script src="<?php echo e(asset('frontend/zoom-images-carousel/zoom-custom.js')); ?>"></script>
 <!-- product zoom js -->
 <script src="<?php echo e(asset('frontend/js/index.js')); ?>"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if(session('success')): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if ("<?php echo e(session('success')); ?>") {
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: "<?php echo e(session('success')); ?>",
+
+                    showClass: {
+                        popup: 'swal2-toast-show'
+                    },
+                    hideClass: {
+                        popup: 'swal2-toast-hide'
+                    },
+
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    width: 'auto'
+                });
+
+            }
+
+        });
+    </script>
+<?php endif; ?>
 
 <script>
     "use strict";
@@ -657,21 +700,36 @@
 </script>
 
 
-<?php if(Session::has('success')): ?>
+<?php if(session('success')): ?>
     <script>
-        swal("<?php echo e(__('Subscribed!')); ?>","<?php echo e(Session::get('success')); ?>","success");
+        Swal.fire({
+            icon: 'success',
+            title: "<?php echo e(__('Subscribed!')); ?>",
+            text: "<?php echo e(session('success')); ?>",
+            confirmButtonText: 'OK'
+        });
     </script>
 <?php endif; ?>
 
-<?php if(Session::has('error')): ?>
+<?php if(session('error')): ?>
     <script>
-        swal('✘' +"  "+ "<?php echo e(Session::get('error')); ?>","error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "<?php echo e(session('error')); ?>",
+            confirmButtonText: 'OK'
+        });
     </script>
 <?php endif; ?>
 
 <?php if($errors->has('email')): ?>
     <script>
-        swal("Error","<?php echo e($errors->first('email')); ?>","error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "<?php echo e($errors->first('email')); ?>",
+            confirmButtonText: 'OK'
+        });
     </script>
 <?php endif; ?>
 

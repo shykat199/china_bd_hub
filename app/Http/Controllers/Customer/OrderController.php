@@ -151,7 +151,8 @@ class OrderController extends Controller
      */
     public function list(Request $request): View
     {
-        $user_id= session('user_id') ?? User::query()->where('mobile',request('mobile'))->first()->id;
+
+        $user_id= \auth()->guard('customer')->user()->id ?? User::query()->where('mobile',request('mobile'))->first()->id;
        // $order = OrderDetail::query()->where('user_id',auth('customer')->id());
         $order = OrderDetail::query()->where('user_id', $user_id);
 

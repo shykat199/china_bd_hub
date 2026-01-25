@@ -87,7 +87,7 @@ class LoginController extends Controller
             //Authentication passed...
             return redirect()
                 ->intended('/home')
-                ->with('status','You are Logged in as Customer!');
+                ->with('success','You are Logged in as Customer!');
         }
 
         //Authentication failed...
@@ -103,7 +103,7 @@ class LoginController extends Controller
     public function username(Request $request): string
     {
         // this string is column of users table which we are going to use for login
-        return filter_var($request->get('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        return filter_var($request->get('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'mobile';
     }
 
     /**
@@ -164,18 +164,31 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        //Store last login time
-        $user = User::query()->findOrFail(auth('customer')->id());
-        $user->update(['last_login_datetime'=>now()]);
+        // ✅ Update last login time (if logged in)
+        $userId = auth('customer')->id();
 
-        $this->guard()->logout();
+        if ($userId) {
+            User::where('id', $userId)
+                ->update(['last_login_datetime' => now()]);
+        }
 
+        // ✅ Logout customer guard
+        Auth::guard('customer')->logout();
+
+        // ✅ Invalidate & regenerate session
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
+        // ✅ Flash toast message (AFTER invalidate)
+        $request->session()->flash(
+            'success',
+            'You have been logged out successfully!'
+        );
+
+        if (method_exists($this, 'loggedOut')) {
+            if ($response = $this->loggedOut($request)) {
+                return $response;
+            }
         }
 
         return $request->wantsJson()

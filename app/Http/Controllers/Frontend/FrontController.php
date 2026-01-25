@@ -655,7 +655,9 @@ class FrontController extends Controller
 
     public function ajaxFilter(Request $request)
     {
-        $p = Product::query()->where('quantity', ">", 0)->where('is_manage_stock', 1)->orderByRaw('quantity = 0, quantity');
+        $p = Product::query()->where('quantity', ">", 0)->where('is_manage_stock', 1)
+            ->orderByRaw('CASE WHEN quantity = 0 THEN 1 ELSE 0 END')
+            ->orderBy('created_at', 'DESC');
 
         if ($request->has('category')) {
             $category = Category::query()
@@ -672,24 +674,22 @@ class FrontController extends Controller
 
             $p->whereIn('category_id', $cats);
         }
+
         if ($request->has('slug') && $request->get('slug') != null) {
             $p->where('name', 'like', '%' . $request->get('slug') . '%')
                 ->orWhere('tags', 'like', '%' . $request->get('slug') . '%');
         }
 
-        if ($request->has('color')) {
-            $colors = $request->get('color');
-            $p->whereHas('colors', function ($q) use ($colors) {
-                $q->whereIn('color_id', $colors);
-            });
-        }
+        $p = Product::query()->whereHas('productstock', function ($q) use ($request) {
 
-        if ($request->has('size')) {
-            $sizes = $request->get('size');
-            $p->whereHas('sizes', function ($q) use ($sizes) {
-                $q->whereIn('size_id', $sizes);
+                if ($request->filled('color')) {
+                    $q->whereIn('color_id', $request->color);
+                }
+
+                if ($request->filled('size')) {
+                    $q->whereIn('size_id', $request->size);
+                }
             });
-        }
 
         if ($request->has('brand')) {
             $brand = $request->get('brand');
@@ -726,7 +726,6 @@ class FrontController extends Controller
         }
 
         $products = $p->where('is_active', 1)->paginate(50);
-        // dd($products->toSql());
 
         return view('frontend.pages._ajax-product', compact('products'));
     }
