@@ -1,7 +1,6 @@
-@extends('backend.layouts.app')
-@section('title','Product - ')
-@push('css')
-    @include('backend.includes.datatable_css')
+<?php $__env->startSection('title','Product - '); ?>
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <style>
         #tableSearchDiv{
             margin-top: 0px;
@@ -9,8 +8,8 @@
             padding-bottom: 5px;
         }
     </style>
-@endpush
-@section('content')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body wholesale-management">
 
     <!-- Tab Content Start -->
@@ -21,32 +20,32 @@
 
                     <div class="content-table mt-0">
 
-                        @include('productmanagement::wholesales.wholesale_management')
+                        <?php echo $__env->make('productmanagement::wholesales.wholesale_management', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                         <div class="row align-items-center mb-3">
                             <div class="col-xxl-3 col-lg-3 col-md-6 mb-2">
-                                <form action="{{ route('backend.products.wholesale') }}" method="GET" id="searchForm">
+                                <form action="<?php echo e(route('backend.products.wholesale')); ?>" method="GET" id="searchForm">
                                     <input type="text"
                                            class="form-control"
                                            name="search"
-                                           value="{{ request('search') }}"
+                                           value="<?php echo e(request('search')); ?>"
                                            placeholder="Search">
                                 </form>
                             </div>
 
                             <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
-                                <form action="{{ route('backend.products.wholesale') }}" method="GET" id="limitForm">
-                                    {{-- keep search query --}}
-                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                <form action="<?php echo e(route('backend.products.wholesale')); ?>" method="GET" id="limitForm">
+                                    
+                                    <input type="hidden" name="search" value="<?php echo e(request('search')); ?>">
 
                                     <select name="limit"
                                             class="form-select"
                                             onchange="this.form.submit()">
-                                        @foreach([10, 25, 50, 100] as $limit)
-                                            <option value="{{ $limit }}"
-                                                {{ request('limit', 10) == $limit ? 'selected' : '' }}>
-                                                {{ $limit }} per page
+                                        <?php $__currentLoopData = [10, 25, 50, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $limit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($limit); ?>"
+                                                <?php echo e(request('limit', 10) == $limit ? 'selected' : ''); ?>>
+                                                <?php echo e($limit); ?> per page
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </form>
                             </div>
@@ -60,49 +59,49 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </th>
-                                <th scope="col">{{__('ID')}}</th>
-                                <th scope="col">{{__('Name')}}</th>
-                                <th scope="col" class="w-120">{{__('Min Quantity')}}</th>
-                                <th scope="col" class="w-120">{{__('Max Quantity')}}</th>
+                                <th scope="col"><?php echo e(__('ID')); ?></th>
+                                <th scope="col"><?php echo e(__('Name')); ?></th>
+                                <th scope="col" class="w-120"><?php echo e(__('Min Quantity')); ?></th>
+                                <th scope="col" class="w-120"><?php echo e(__('Max Quantity')); ?></th>
 
-                                <th scope="col" class="w-120">{{__('Price')}}</th>
-                                <th scope="col" class="w-120">{{__('Status')}}</th>
-                                <th scope="col" class="w-120">{{__('Action')}}</th>
+                                <th scope="col" class="w-120"><?php echo e(__('Price')); ?></th>
+                                <th scope="col" class="w-120"><?php echo e(__('Status')); ?></th>
+                                <th scope="col" class="w-120"><?php echo e(__('Action')); ?></th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($products as $product)
+                            <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr class="listR">
                                         <td>
                                             <input type="checkbox"
                                                    name="ids[]"
-                                                   value="{{ $product->id }}"
+                                                   value="<?php echo e($product->id); ?>"
                                                    data-bulk="true"
                                                    class="wholesaleCheckbox rowCheckbox">
                                         </td>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$product->name}}</td>
+                                        <td><?php echo e($loop->iteration); ?></td>
+                                        <td><?php echo e($product->name); ?></td>
                                         <td colspan="4" class="p-0">
                                             <table class="inner-table-product-qty">
-                                            @foreach($product->wholesales as $wholesale)
+                                            <?php $__currentLoopData = $product->wholesales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wholesale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <tr>
-                                                    <td class="w-120">{{$wholesale->min_range}}</td>
-                                                    <td class="w-120">{{$wholesale->max_range}}</td>
-                                                    <td class="w-120">{{$wholesale->price}}</td>
+                                                    <td class="w-120"><?php echo e($wholesale->min_range); ?></td>
+                                                    <td class="w-120"><?php echo e($wholesale->max_range); ?></td>
+                                                    <td class="w-120"><?php echo e($wholesale->price); ?></td>
                                                     <td class="w-120">
                                                         <div class="form-switch">
-                                                            <input class="form-check-input status" type="checkbox" data-bulk="false" value="{{$wholesale->status}}" @if ($wholesale->status==1) checked @endif " data-id="{{$wholesale->id}}">
+                                                            <input class="form-check-input status" type="checkbox" data-bulk="false" value="<?php echo e($wholesale->status); ?>" <?php if($wholesale->status==1): ?> checked <?php endif; ?> " data-id="<?php echo e($wholesale->id); ?>">
                                                         </div>
                                                     </td>
 
                                                 </tr>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </table>
                                         </td>
                                         <td class="w-120">
                                             <ul>
                                                 <li>
-                                                    <a class="p-0 action" href="{{route('backend.products.wholesale.edit',$product->id)}}">
+                                                    <a class="p-0 action" href="<?php echo e(route('backend.products.wholesale.edit',$product->id)); ?>">
                                                         <button title="Edit">
                                                             <svg viewBox="0 0 11 11" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M8.72031 5.31576C8.48521 5.31576 8.29519 5.50625 8.29519 5.74089V9.1421C8.29519 9.37634 8.1047 9.56722 7.87007 9.56722H1.91801C1.68331 9.56722 1.49289 9.37634 1.49289 9.1421V3.19C1.49289 2.95575 1.68331 2.76487 1.91801 2.76487H5.3192C5.5543 2.76487 5.74432 2.57438 5.74432 2.33975C5.74432 2.10504 5.5543 1.91455 5.3192 1.91455H1.91801C1.21483 1.91455 0.642578 2.4868 0.642578 3.19V9.1421C0.642578 9.84529 1.21483 10.4175 1.91801 10.4175H7.87007C8.57326 10.4175 9.14551 9.84529 9.14551 9.1421V5.74089C9.14551 5.50579 8.95541 5.31576 8.72031 5.31576Z"></path>
@@ -113,9 +112,9 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <form action="{{route('backend.products.wholesale.destroy',$product->id)}}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
+                                                    <form action="<?php echo e(route('backend.products.wholesale.destroy',$product->id)); ?>" method="POST">
+                                                        <?php echo csrf_field(); ?>
+                                                        <?php echo method_field('DELETE'); ?>
                                                         <a class="p-0 action" href="javascript:void(0);" onclick="deleteWithSweetAlert(event,parentNode);">
                                                             <button title="Delete">
                                                                 <svg viewBox="0 0 10 11" xmlns="http://www.w3.org/2000/svg">
@@ -130,10 +129,10 @@
                                         </td>
 
                                     </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
-                        <div>{{$products->links()}}</div>
+                        <div><?php echo e($products->links()); ?></div>
 
                     </div>
                 </div>
@@ -141,10 +140,10 @@
         </div>
         <!-- Tab Content End -->
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-   {{-- @include('backend.includes.datatable_js')--}}
+<?php $__env->startPush('js'); ?>
+   
 
    <script>
        document.addEventListener('DOMContentLoaded', function () {
@@ -234,11 +233,11 @@
 
                    const ids = Array.from(checked).map(cb => cb.value);
 
-                   fetch("{{ route('products.bulkDelete') }}", {
+                   fetch("<?php echo e(route('products.bulkDelete')); ?>", {
                        method: "POST",
                        headers: {
                            "Content-Type": "application/json",
-                           "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                           "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
                        },
                        body: JSON.stringify({ ids })
                    })
@@ -271,7 +270,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: public_path +@auth('admin')'/admin/product/changeStatusWholesale'@elseauth('seller')'/seller/product/changeStatusWholesale'@endauth,
+                    url: public_path +<?php if(auth()->guard('admin')->check()): ?>'/admin/product/changeStatusWholesale'<?php elseif(auth()->guard('seller')->check()): ?>'/seller/product/changeStatusWholesale'<?php endif; ?>,
                     data: {'status': status, 'id': id,'field': 'status'},
                     success: function(data){
                         notification('success', data.message);
@@ -291,4 +290,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/ProductManagement/Resources/views/wholesales/index.blade.php ENDPATH**/ ?>
