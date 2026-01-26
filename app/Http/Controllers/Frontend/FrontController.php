@@ -161,10 +161,7 @@ class FrontController extends Controller
         $products = Product::query()
             ->where('is_active', 1)
             ->where('is_manage_stock', 1)
-            ->where(function ($query) use ($request) {
-                $query->where('name', 'like', "%{$request->q}%")
-                    ->orWhere('sku', 'like', "%{$request->q}%");
-            })
+            ->where('name', 'like', "%{$request->q}%")
             ->orderByRaw('CASE WHEN quantity = 0 THEN 1 ELSE 0 END') // stock grouping
             ->orderBy('created_at', 'DESC')
             ->paginate(100);
@@ -759,12 +756,10 @@ class FrontController extends Controller
     {
         $products = Product::query()
             ->with('images')
-            ->where(function ($query) use ($request) {
-                $query->where('name', 'like', "%{$request->search}%")
-                    ->orWhere('sku', 'like', "%{$request->search}%")
-                    ->orWhere('tags', 'like', "%{$request->search}%");
-            })
+            ->where('name', 'like', '%' . $request->search . '%')
+            ->orWhere('tags', 'like', '%' . $request->search . '%')
             ->inRandomOrder()
+            //->take(4)
             ->get();
 
         $pro = [];
