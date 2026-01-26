@@ -1,6 +1,5 @@
-@extends('backend.layouts.app')
-@section('title','Orders - ')
-@push('css')
+<?php $__env->startSection('title','Orders - '); ?>
+<?php $__env->startPush('css'); ?>
     <style>
 
         /* my bazar invoice css */
@@ -151,30 +150,20 @@
     </style>
 
 
-    {{-- <style>
-        @media print {
-            body{
-               visibility: hidden;
-            }
-            .maan-mybazar-invoice{
-                visibility: visible;
-                position: absolute;
-                left: 0;
-                right: 0;
-            }
-        }
-    </style> --}}
-@endpush
-@section('content')
+    
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
         <div class="container d-print-block">
             <nav class="d-print-none">
                 <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" Area-controls="nav-home" Area-selected="true">
-                        {{ __('Order Details') }}
+                        <?php echo e(__('Order Details')); ?>
+
                     </button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" Area-controls="nav-profile" Area-selected="false">
-                        {{ __('Invoice') }}
+                        <?php echo e(__('Invoice')); ?>
+
                     </button>
                 </div>
             </nav>
@@ -183,36 +172,37 @@
                      Area-labelledby="nav-home-tab">
                     <div class="invoice d-print-block">
                         <div class="invoice-title">
-                            <h6>{{__('INVOICE')}}#
-                                {{$order->order_no??''}}
+                            <h6><?php echo e(__('INVOICE')); ?>#
+                                <?php echo e($order->order_no??''); ?>
+
                             </h6>
-                            <p>CREATED AT {{date("d M Y h:i A",strtotime($order->created_at))}}</p>
+                            <p>CREATED AT <?php echo e(date("d M Y h:i A",strtotime($order->created_at))); ?></p>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card order-item">
                                     <div class="mybazar-product-info-billing" id="order_details">
                                         <div class="card-header">
-                                            <h6>{{__('Item Details')}}</h6>
+                                            <h6><?php echo e(__('Item Details')); ?></h6>
                                         </div>
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th scope="col">{{__('Item')}}</th>
-                                                <th scope="col">{{__('Image')}}</th>
-                                                {{--  <th scope="col">{{__('Courier')}}</th>  --}}
-                                                <th scope="col">{{__('Color')}}</th>
-                                                <th scope="col">{{__('Size')}}</th>
-                                                <th scope="col">{{__('HRS')}}/{{__('QTY')}}</th>
-                                                <th scope="col">{{__('Rate')}}</th>
-                                                <th scope="col">{{__('Subtotal')}}</th>
-                                                <th scope="col">{{__('Status')}}</th>
-                                                <th scope="col">{{__('Action')}}</th>
+                                                <th scope="col"><?php echo e(__('Item')); ?></th>
+                                                <th scope="col"><?php echo e(__('Image')); ?></th>
+                                                
+                                                <th scope="col"><?php echo e(__('Color')); ?></th>
+                                                <th scope="col"><?php echo e(__('Size')); ?></th>
+                                                <th scope="col"><?php echo e(__('HRS')); ?>/<?php echo e(__('QTY')); ?></th>
+                                                <th scope="col"><?php echo e(__('Rate')); ?></th>
+                                                <th scope="col"><?php echo e(__('Subtotal')); ?></th>
+                                                <th scope="col"><?php echo e(__('Status')); ?></th>
+                                                <th scope="col"><?php echo e(__('Action')); ?></th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach($order->details as $key => $detail)
-                                                @php
+                                            <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php
                                                     $pId = $detail->product_id;
                                                    $productStocks = \App\Models\Productstock::with(['color','size'])->where('product_id',$pId)->get();
                                                    $matchedStock = $productStocks->first(function ($stock) use ($detail) {
@@ -220,117 +210,122 @@
                                                             strtolower($stock->color->name ?? '') === strtolower($detail->color ?? '') &&
                                                             strtolower($stock->size->name ?? '')  === strtolower($detail->size ?? '');
                                                     });
-                                                 @endphp
+                                                 ?>
 
-                                                @php
+                                                <?php
                                                     $imagePath = $matchedStock->variant_image ?? null;
                                                     $fullPath  = base_path('uploads/products/galleries/' . $imagePath);
-                                                @endphp
-                                                <tr data-product="{{$detail->product_id}}">
-                                                    <td scope="row"> {{$detail->product->name??''}}
-                                                        <a href="@auth('admin'){{route('backend.order_details_seller',['order_id'=>$detail->order_id,'seller_id'=>$detail->seller_id])}}@endauth" class="text-primary" target="_blank">({{$detail->seller->company_name??$website->website_name}})</a>
+                                                ?>
+                                                <tr data-product="<?php echo e($detail->product_id); ?>">
+                                                    <td scope="row"> <?php echo e($detail->product->name??''); ?>
+
+                                                        <a href="<?php if(auth()->guard('admin')->check()): ?><?php echo e(route('backend.order_details_seller',['order_id'=>$detail->order_id,'seller_id'=>$detail->seller_id])); ?><?php endif; ?>" class="text-primary" target="_blank">(<?php echo e($detail->seller->company_name??$website->website_name); ?>)</a>
                                                     </td>
                                                     <td>
-                                                        @if($matchedStock && $imagePath && file_exists($fullPath))
+                                                        <?php if($matchedStock && $imagePath && file_exists($fullPath)): ?>
                                                             <img
-                                                                src="{{ asset('uploads/products/galleries/' . $imagePath) }}"
+                                                                src="<?php echo e(asset('uploads/products/galleries/' . $imagePath)); ?>"
                                                                 width="60"
                                                                 alt="Variant Image"
                                                             >
-                                                        @else
-                                                           @php
+                                                        <?php else: ?>
+                                                           <?php
                                                             $productImagePath = $detail->product->images[0]->image ?? null ;
-                                                           @endphp
+                                                           ?>
 
-                                                            @if($productImagePath)
-                                                                    <img src="{{ asset('uploads/products/galleries/' . $productImagePath) }}"
+                                                            <?php if($productImagePath): ?>
+                                                                    <img src="<?php echo e(asset('uploads/products/galleries/' . $productImagePath)); ?>"
                                                                         width="60"
                                                                         alt="Variant Image"
                                                                     >
-                                                                @else
+                                                                <?php else: ?>
                                                                     <span>No image</span>
-                                                            @endif
-                                                        @endif
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
                                                     </td>
-                                                    {{--  <td>{{$detail->courier??''}}</td>  --}}
-                                                    <td>{{$detail->color??'N/A'}}</td>
-                                                    <td>{{$detail->size??'N/A'}}</td>
-                                                    <td>{{$detail->qty??'N/A'}}</td>
-                                                    <td>{{$detail->sale_price??'N/A'}}</td>
-                                                    <td>{{$detail->total_price??'N/A'}}</td>
+                                                    
+                                                    <td><?php echo e($detail->color??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->size??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->qty??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->sale_price??'N/A'); ?></td>
+                                                    <td><?php echo e($detail->total_price??'N/A'); ?></td>
                                                     <td>
-                                                        @php
+                                                        <?php
                                                             $orderStatus = $detail->order->order_status
-                                                        @endphp
+                                                        ?>
                                                         <div class="invoice-title">
                                                             <h6>
-                                                                @if ($orderStatus == 1)
+                                                                <?php if($orderStatus == 1): ?>
                                                                     <span class="badge bg-warning">Pending</span>
-                                                                @elseif ($orderStatus == 2)
+                                                                <?php elseif($orderStatus == 2): ?>
                                                                     <span class="badge bg-info">Confirmed</span>
-                                                                @elseif ($orderStatus == 3)
+                                                                <?php elseif($orderStatus == 3): ?>
                                                                     <span class="badge bg-primary">Processing</span>
-                                                                @elseif ($orderStatus == 4)
+                                                                <?php elseif($orderStatus == 4): ?>
                                                                     <span class="badge bg-secondary">Picked</span>
-                                                                @elseif ($orderStatus == 5)
+                                                                <?php elseif($orderStatus == 5): ?>
                                                                     <span class="badge bg-light text-dark border">Shipped</span>
-                                                                @elseif ($orderStatus == 6)
+                                                                <?php elseif($orderStatus == 6): ?>
                                                                     <span class="badge bg-success">Delivered</span>
-                                                                @elseif ($orderStatus == 7)
+                                                                <?php elseif($orderStatus == 7): ?>
                                                                     <span class="badge bg-danger">Cancelled</span>
-                                                                @elseif ($orderStatus == 8)
+                                                                <?php elseif($orderStatus == 8): ?>
                                                                     <span class="badge bg-dark">Returned</span>
-                                                                @else
+                                                                <?php else: ?>
                                                                     <span class="badge bg-info">In Courier</span>
-                                                                @endif
+                                                                <?php endif; ?>
                                                             </h6>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <button class="update-order-btn btn btn-warning btn-sm" data-product_id="{{$detail->product_id}}" data-orders_details_id="{{$detail->id}}">
-                                                            <b>{{__('Change Status')}}</b>
+                                                        <button class="update-order-btn btn btn-warning btn-sm" data-product_id="<?php echo e($detail->product_id); ?>" data-orders_details_id="<?php echo e($detail->id); ?>">
+                                                            <b><?php echo e(__('Change Status')); ?></b>
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </tbody>
                                         </table>
                                     </div>
-{{--                                    @dd($order)--}}
+
                                     <div class="mybazar-total-info">
                                         <ul>
-                                            <li>{{__('Item(s) Subtotal')}}
-                                                :<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
-                                            <li>{{__('Shipping Charge')}}
-                                                :<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
+                                            <li><?php echo e(__('Item(s) Subtotal')); ?>
+
+                                                :<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+                                            <li><?php echo e(__('Shipping Charge')); ?>
+
+                                                :<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
                                             <li>-------------------------------------------</li>
-                                            <li>{{__('SubTotal')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
-                                            <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
+                                            <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
+                                            <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
                                             <li>-------------------------------------------</li>
-                                            <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
+                                            <li><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="card timeline-item d-print-none">
                                     <div class="card-header">
-                                        <h6>{{__('Timeline')}}</h6>
-                                        <span>{{__('Click on item to see timeline')}}</span>
+                                        <h6><?php echo e(__('Timeline')); ?></h6>
+                                        <span><?php echo e(__('Click on item to see timeline')); ?></span>
                                     </div>
                                     <div class="card-body">
                                         <ul>
-                                            @foreach($order->details as $key => $detail)
-                                                @foreach($detail->timelines as $index => $timeline)
-                                                    <li class="d-none product_{{$timeline->product_id}}">
+                                            <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php $__currentLoopData = $detail->timelines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $timeline): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="d-none product_<?php echo e($timeline->product_id); ?>">
                                                         <div class="time">
-                                                            {{$timeline->order_stat_datetime}}
+                                                            <?php echo e($timeline->order_stat_datetime); ?>
+
                                                             <span></span></div>
                                                         <p>
-                                                            {{$timeline->order_stat_desc??''}}
+                                                            <?php echo e($timeline->order_stat_desc??''); ?>
+
                                                         </p>
-                                                        <div class="option refunded">{{$timeline->status->name??''}}</div>
+                                                        <div class="option refunded"><?php echo e($timeline->status->name??''); ?></div>
                                                     </li>
-                                                @endforeach
-                                            @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -339,7 +334,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" Area-labelledby="nav-profile-tab">
-                    @include('ordermanagement::orders.invoice')
+                    <?php echo $__env->make('ordermanagement::orders.invoice', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 </div>
             </div>
 
@@ -349,38 +344,38 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">{{__('Update')}}</h5>
+                        <h5 class="modal-title" id="updateModalLabel"><?php echo e(__('Update')); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" Area-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ auth('seller')->user() ? url('/seller/orders_details') : url('/admin/orders_details') }}" class="ajaxform_instant_reload" method="post">
-                            @csrf()
-                            @method("PUT")
+                        <form action="<?php echo e(auth('seller')->user() ? url('/seller/orders_details') : url('/admin/orders_details')); ?>" class="ajaxform_instant_reload" method="post">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field("PUT"); ?>
 
-                            <input type="hidden" name="order_id" value="{{$order->id}}">
+                            <input type="hidden" name="order_id" value="<?php echo e($order->id); ?>">
                             <input type="hidden" name="orders_details_id" id="orders_details_id" value="">
                             <input type="hidden" name="product_id" id="product_id" value="">
                             <div class="mb-3 form-group input-group row">
-                                <label for="message-text" class="col-form-label col-md-4">{{ __('Status') }}</label>
+                                <label for="message-text" class="col-form-label col-md-4"><?php echo e(__('Status')); ?></label>
                                 <select name="order_stat" class="form-control col-md-6" required>
-                                    <option  value="">{{ __('Select Status') }}</option>
-                                    <option {{$order->order_status == '1' ? 'selected' : ''}} value="1">{{ __('Pending') }}</option>
-                                    <option {{$order->order_status == '3' ? 'selected' : ''}} value="3">{{ __('Processing') }}</option>
-                                    <option {{$order->order_status == '2' ? 'selected' : ''}} value="2">{{ __('Confirmed') }}</option>
-                                    <option {{$order->order_status == '9' ? 'selected' : ''}} value="9">{{ __('In Courier') }}</option>
-                                    <option {{$order->order_status == '4' ? 'selected' : ''}} value="4">{{ __('Picked') }}</option>
-                                    <option {{$order->order_status == '5' ? 'selected' : ''}} value="5">{{ __('Shipped') }}</option>
-                                    <option {{$order->order_status == '7' ? 'selected' : ''}} value="7">{{ __('Cancelled') }}</option>
-                                    <option {{$order->order_status == '6' ? 'selected' : ''}} value="6">{{ __('Delivered') }}</option>
-                                    <option {{$order->order_status == '8' ? 'selected' : ''}} value="8">{{ __('Returned') }}</option>
+                                    <option  value=""><?php echo e(__('Select Status')); ?></option>
+                                    <option <?php echo e($order->order_status == '1' ? 'selected' : ''); ?> value="1"><?php echo e(__('Pending')); ?></option>
+                                    <option <?php echo e($order->order_status == '3' ? 'selected' : ''); ?> value="3"><?php echo e(__('Processing')); ?></option>
+                                    <option <?php echo e($order->order_status == '2' ? 'selected' : ''); ?> value="2"><?php echo e(__('Confirmed')); ?></option>
+                                    <option <?php echo e($order->order_status == '9' ? 'selected' : ''); ?> value="9"><?php echo e(__('In Courier')); ?></option>
+                                    <option <?php echo e($order->order_status == '4' ? 'selected' : ''); ?> value="4"><?php echo e(__('Picked')); ?></option>
+                                    <option <?php echo e($order->order_status == '5' ? 'selected' : ''); ?> value="5"><?php echo e(__('Shipped')); ?></option>
+                                    <option <?php echo e($order->order_status == '7' ? 'selected' : ''); ?> value="7"><?php echo e(__('Cancelled')); ?></option>
+                                    <option <?php echo e($order->order_status == '6' ? 'selected' : ''); ?> value="6"><?php echo e(__('Delivered')); ?></option>
+                                    <option <?php echo e($order->order_status == '8' ? 'selected' : ''); ?> value="8"><?php echo e(__('Returned')); ?></option>
                                 </select>
                             </div>
                             <div class="mb-3 form-group input-group row">
-                                <label for="message-text" class="col-form-label col-md-4">{{__('Description')}}</label>
+                                <label for="message-text" class="col-form-label col-md-4"><?php echo e(__('Description')); ?></label>
                                 <textarea name="order_stat_desc" rows="3" class="form-control col-md-6" ></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary submit-btn"><i class="fa-solid fa-floppy-disk-circle-arrow-right"></i> {{__('Save')}}</button>
+                                <button type="submit" class="btn btn-primary submit-btn"><i class="fa-solid fa-floppy-disk-circle-arrow-right"></i> <?php echo e(__('Save')); ?></button>
                             </div>
                         </form>
                     </div>
@@ -400,7 +395,7 @@
                         <div class="maan-mybazar-invoice">
                             <div class="my-bazar-invoice-header">
                                 <a href="" class="logo">
-                                    <img src="@if($website->logo){{URL::to('uploads').'/'.$website->logo}} @else 'uploads/logo.png' @endif"
+                                    <img src="<?php if($website->logo): ?><?php echo e(URL::to('uploads').'/'.$website->logo); ?> <?php else: ?> 'uploads/logo.png' <?php endif; ?>"
                                          width="150" alt="logo">
                                 </a>
                                 <button class="maan-print-btn d-print-none" onclick="window.print()">
@@ -411,58 +406,61 @@
         </svg>
                                 </button>
                                 <div class="customer-detail">
-                                    <p><b>{{ ucfirst($website->website_name)}}</b></p>
-                                    <p>{{$website->get_in_touch??''}}</p>
-                                    <p>{{ucfirst($website->city).'-'.$website->post_code??''}}</p>
-                                    <p>{{$website->country->name??''}}</p>
-                                    <p>{{$website->email??''}}</p>
+                                    <p><b><?php echo e(ucfirst($website->website_name)); ?></b></p>
+                                    <p><?php echo e($website->get_in_touch??''); ?></p>
+                                    <p><?php echo e(ucfirst($website->city).'-'.$website->post_code??''); ?></p>
+                                    <p><?php echo e($website->country->name??''); ?></p>
+                                    <p><?php echo e($website->email??''); ?></p>
                                 </div>
                             </div>
                             <div class="mybazar-billing-info">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="billing-info">
-                                            <h4>{{__('Billing Address')}}</h4>
+                                            <h4><?php echo e(__('Billing Address')); ?></h4>
                                             <ul>
-                                                <li><span>{{__('Name')}}:</span>{{$order->full_name()}}</li>
-                                                @if($order->user_mobile)
-                                                    <li><span>{{__('Phone')}} :</span>{{$order->user_mobile??''}}</li>
-                                                @endif
-                                                <li><span>{{__('Address')}}:</span> {{ $order->shipping_address_2 }} </li>
+                                                <li><span><?php echo e(__('Name')); ?>:</span><?php echo e($order->full_name()); ?></li>
+                                                <?php if($order->user_mobile): ?>
+                                                    <li><span><?php echo e(__('Phone')); ?> :</span><?php echo e($order->user_mobile??''); ?></li>
+                                                <?php endif; ?>
+                                                <li><span><?php echo e(__('Address')); ?>:</span> <?php echo e($order->shipping_address_2); ?> </li>
 
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="billing-info">
-                                            <h4>{{__('Shipping Address')}}</h4>
+                                            <h4><?php echo e(__('Shipping Address')); ?></h4>
                                             <ul>
-                                                <li> {{ $order->shipping_address_1 }}
+                                                <li> <?php echo e($order->shipping_address_1); ?>
+
                                                 </li>
 
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <h5><span>{{__('Invoice No')}}: </span>
-                                    {{ $order->order_no ?? '' }}
+                                <h5><span><?php echo e(__('Invoice No')); ?>: </span>
+                                    <?php echo e($order->order_no ?? ''); ?>
+
                                 </h5>
-                                <h5><span>{{__('Invoice Date')}}: </span>{{date("d M Y ",strtotime($order->created_at))}}</h5>
-                                <h5><span>{{__('Sold By')}}: </span>
-                                    {{ ucfirst($website->website_name)}}
+                                <h5><span><?php echo e(__('Invoice Date')); ?>: </span><?php echo e(date("d M Y ",strtotime($order->created_at))); ?></h5>
+                                <h5><span><?php echo e(__('Sold By')); ?>: </span>
+                                    <?php echo e(ucfirst($website->website_name)); ?>
+
                                 </h5>
                             </div>
                             <div class="mybazar-product-info-billing">
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th scope="col">{{__('Item')}}</th>
-                                        {{-- <th scope="col">{{__('Courier')}}</th> --}}
-                                        <th scope="col">{{__('Color')}}</th>
-                                        <th scope="col">{{__('Size')}}</th>
-                                        <th scope="col">{{__('HRS')}}/{{__('QTY')}}</th>
-                                        <th scope="col">{{__('Rate')}}</th>
-                                        <th scope="col">{{__('Subtotal')}}</th>
+                                        <th scope="col"><?php echo e(__('Item')); ?></th>
+                                        
+                                        <th scope="col"><?php echo e(__('Color')); ?></th>
+                                        <th scope="col"><?php echo e(__('Size')); ?></th>
+                                        <th scope="col"><?php echo e(__('HRS')); ?>/<?php echo e(__('QTY')); ?></th>
+                                        <th scope="col"><?php echo e(__('Rate')); ?></th>
+                                        <th scope="col"><?php echo e(__('Subtotal')); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody id="seller-invoice-table">
@@ -473,14 +471,14 @@
                             </div>
                             <div class="mybazar-total-info">
                                 <ul>
-                                    <li>{{__('Item(s) Subtotal')}}:<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
-                                    <li>{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
+                                    <li><?php echo e(__('Item(s) Subtotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+                                    <li><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
                                     <li>-------------------------------------------</li>
-                                    <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-                                    <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
-                                    {{--  <li>{{__('Vat')}}:<span>{{ $order->totalVat() }}</span></li>  --}}
+                                    <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+                                    <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
+                                    
                                     <li>-------------------------------------------</li>
-                                    <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
+                                    <li><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
                                 </ul>
                             </div>
                             <div class="signature">
@@ -496,9 +494,9 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
+<?php $__env->startPush('js'); ?>
     <script>
 
         $(function () {
@@ -582,79 +580,79 @@
             iFrame.srcdoc = `<div class="maan-mybazar-invoice" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 10px; border: 1px solid #e0e0e0; font-size: 12px;">
     <div class="my-bazar-invoice-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <a href="" class="logo" style="text-decoration: none;">
-            <img src="@if($website->logo){{URL::to('uploads').'/'.$website->logo}} @else 'uploads/logo.png' @endif" width="100" alt="logo" style="max-width: 100px;">
+            <img src="<?php if($website->logo): ?><?php echo e(URL::to('uploads').'/'.$website->logo); ?> <?php else: ?> 'uploads/logo.png' <?php endif; ?>" width="100" alt="logo" style="max-width: 100px;">
         </a>
 
         <div class="customer-detail" style="text-align: right; font-size: 10px;">
-            <p style="margin: 2px 0;"><b>{{ ucfirst($website->website_name)}}</b></p>
-            <p style="margin: 2px 0;">{{$website->get_in_touch??''}}</p>
-            <p style="margin: 2px 0;">{{ucfirst($website->city).'-'.$website->post_code??''}}</p>
-            <p style="margin: 2px 0;">{{$website->country->name??''}}</p>
-            <p style="margin: 2px 0;">{{$website->email??''}}</p>
+            <p style="margin: 2px 0;"><b><?php echo e(ucfirst($website->website_name)); ?></b></p>
+            <p style="margin: 2px 0;"><?php echo e($website->get_in_touch??''); ?></p>
+            <p style="margin: 2px 0;"><?php echo e(ucfirst($website->city).'-'.$website->post_code??''); ?></p>
+            <p style="margin: 2px 0;"><?php echo e($website->country->name??''); ?></p>
+            <p style="margin: 2px 0;"><?php echo e($website->email??''); ?></p>
         </div>
     </div>
     <div class="mybazar-billing-info" style="margin-bottom: 10px;">
         <div class="row" style="display: flex; justify-content: space-between;">
             <div class="col-6" style="width: 48%;">
                 <div class="billing-info" style="background-color: #f9f9f9; padding: 5px; border-radius: 3px; font-size: 10px;">
-                    <h4 style="margin: 0 0 5px 0; color: #333;">{{__('Billing Address')}}</h4>
+                    <h4 style="margin: 0 0 5px 0; color: #333;"><?php echo e(__('Billing Address')); ?></h4>
                     <ul style="list-style-type: none; padding: 0; margin: 0;">
-                        <li><span style="font-weight: bold;">{{__('Name')}}:</span> {{$order->full_name()}}</li>
-                        @if($order->user_mobile)
-                            <li><span style="font-weight: bold;">{{__('Phone')}}:</span> {{$order->user_mobile??''}}</li>
-                        @endif
-                        <li><span style="font-weight: bold;">{{__('Address')}}:</span> {{ $order->shipping_address_2 }}</li>
+                        <li><span style="font-weight: bold;"><?php echo e(__('Name')); ?>:</span> <?php echo e($order->full_name()); ?></li>
+                        <?php if($order->user_mobile): ?>
+                            <li><span style="font-weight: bold;"><?php echo e(__('Phone')); ?>:</span> <?php echo e($order->user_mobile??''); ?></li>
+                        <?php endif; ?>
+                        <li><span style="font-weight: bold;"><?php echo e(__('Address')); ?>:</span> <?php echo e($order->shipping_address_2); ?></li>
                     </ul>
                 </div>
             </div>
             <div class="col-6" style="width: 48%;">
                 <div class="billing-info" style="background-color: #f9f9f9; padding: 5px; border-radius: 3px; font-size: 10px;">
-                    <h4 style="margin: 0 0 5px 0; color: #333;">{{__('Shipping Address')}}</h4>
-                    <p style="margin: 0;">{{ $order->shipping_address_1 }}</p>
+                    <h4 style="margin: 0 0 5px 0; color: #333;"><?php echo e(__('Shipping Address')); ?></h4>
+                    <p style="margin: 0;"><?php echo e($order->shipping_address_1); ?></p>
                 </div>
             </div>
         </div>
-        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;">{{__('Invoice No')}}: </span>{{ $order->order_no ?? '' }}</p>
-        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;">{{__('Invoice Date')}}: </span>{{date("d M Y ",strtotime($order->created_at))}}</p>
-        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;">{{__('Sold By')}}: </span>{{ ucfirst($website->website_name)}}</p>
+        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;"><?php echo e(__('Invoice No')); ?>: </span><?php echo e($order->order_no ?? ''); ?></p>
+        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;"><?php echo e(__('Invoice Date')); ?>: </span><?php echo e(date("d M Y ",strtotime($order->created_at))); ?></p>
+        <p style="margin: 5px 0; font-size: 10px;"><span style="font-weight: bold;"><?php echo e(__('Sold By')); ?>: </span><?php echo e(ucfirst($website->website_name)); ?></p>
     </div>
     <div class="mybazar-product-info-billing" style="margin-bottom: 10px;">
         <table class="table" style="width: 100%; border-collapse: collapse; font-size: 10px;">
             <thead>
                 <tr style="background-color: #f2f2f2;">
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('Item')}}</th>
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('Color')}}</th>
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('Size')}}</th>
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('QTY')}}</th>
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('Rate')}}</th>
-                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;">{{__('Subtotal')}}</th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('Item')); ?></th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('Color')); ?></th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('Size')); ?></th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('QTY')); ?></th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('Rate')); ?></th>
+                    <th scope="col" style="padding: 5px; text-align: left; border-bottom: 1px solid #ddd;"><?php echo e(__('Subtotal')); ?></th>
                 </tr>
             </thead>
             <tbody id="seller-invoice-table1">
-                @foreach($order->details as $key => $detail)
-                    @if($detail->order_stat!=7)
-                    <tr data-product="{{$detail->product_id}}" style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 5px;">{{$detail->product->name??''}}</td>
-                        <td style="padding: 5px;">{{$detail->color??''}}</td>
-                        <td style="padding: 5px;">{{$detail->size??''}}</td>
-                        <td style="padding: 5px;">{{$detail->qty??''}}</td>
-                        <td style="padding: 5px;">{{$detail->sale_price??''}}</td>
-                        <td style="padding: 5px;">{{$detail->total_price??''}}</td>
+                <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($detail->order_stat!=7): ?>
+                    <tr data-product="<?php echo e($detail->product_id); ?>" style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 5px;"><?php echo e($detail->product->name??''); ?></td>
+                        <td style="padding: 5px;"><?php echo e($detail->color??''); ?></td>
+                        <td style="padding: 5px;"><?php echo e($detail->size??''); ?></td>
+                        <td style="padding: 5px;"><?php echo e($detail->qty??''); ?></td>
+                        <td style="padding: 5px;"><?php echo e($detail->sale_price??''); ?></td>
+                        <td style="padding: 5px;"><?php echo e($detail->total_price??''); ?></td>
                     </tr>
-                    @endif
-                @endforeach
+                    <?php endif; ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>
     </div>
     <div class="mybazar-total-info" style="margin-bottom: 10px;">
         <ul style="list-style-type: none; padding: 0; border-top: 1px solid #ddd; padding-top: 5px; font-size: 10px;">
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Item(s) Subtotal')}}:<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Item(s) Subtotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;"><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->discount,2)); ?> ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
-            <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;">{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;"><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
         </ul>
     </div>
     <div class="signature" style="text-align: right; margin-top: 10px;">
@@ -669,4 +667,6 @@
             iFrame.contentWindow.print();
         })
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/OrderManagement/Resources/views/orders/show.blade.php ENDPATH**/ ?>

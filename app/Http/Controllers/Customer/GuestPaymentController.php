@@ -287,7 +287,7 @@ class GuestPaymentController extends Controller
     public function orderStore(Request $request)
     {
         return DB::transaction(function () use ($request) {
-            // 🔁 Get cart from SESSION
+
             $cart = json_decode(json_encode(session()->get('cart', [])));
 
             $name = $request->first_name;
@@ -298,19 +298,48 @@ class GuestPaymentController extends Controller
             $order_no = 'INV' . ($order_no + 1);
 
             // Totals from SESSION
+            $couponInfo = session('coupon_infos');
             $subTotal = session('subTotal', 0);
             $total_discount = session('total_discount', 0) + session('coupon_discount', 0);
             $total_vat = session('total_vat', 0);
-//        $totalShipping = session('totalShipping', 0);
+
+            if ($couponInfo){
+                $discount = $couponInfo['discount'];
+                if ($couponInfo['type'] == 'cart') {
+
+                    if ($couponInfo['discount_type'] == 'percent') {
+                        $discount =  ($subTotal * ($discount / 100));
+                    }
+                }
+                else {
+                    $cart = json_decode(Cookie::get('cart'), true);
+                    $couponProductId = json_decode($couponInfo['details'])->product_id;
+
+                    $eligible = false;
+                    $product = null;
+                    foreach ($couponProductId as $id) {
+                        $exists = array_search($id, array_column($cart, 'id'));
+                        if ($exists !== false) {
+                            $eligible = true;
+                            $product = Product::query()->findOrFail($id);
+                        }
+                    }
+
+                    if ($eligible) {
+                        $price = $product->sale_price;
+
+                        if ($couponInfo['discount_type'] == 'percent') {
+                            $discount = $price * ($discount / 100);
+                        }
+                    } else {
+                        $discount = 0;
+                    }
+                }
+            }
+
+            $subTotal = $subTotal - ($discount ?? 0);
+
             $totalShipping = $request->shipping_cost;
-
-            if ($totalShipping) {
-                $subTotal += $totalShipping;
-            }
-
-            if ($total_discount) {
-                $subTotal -= $totalShipping;
-            }
 
             // Email (optional)
             if ($request->get('email') != null) {
@@ -338,7 +367,7 @@ class GuestPaymentController extends Controller
                 'vat' => $total_vat,
                 'coupon_discount' => session('coupon_discount'),
                 'shipping_cost' => $totalShipping,
-                'total_price' => $subTotal,
+                'total_price' => $subTotal + ($totalShipping ?? 0),
                 'coupon_id' => session('coupon_id'),
                 'shipping_name' => $name,
                 'shipping_address_1' => $request->billing_address,
@@ -347,7 +376,7 @@ class GuestPaymentController extends Controller
                 'payment_by' => $request->payment_by ?? 'COD',
                 'user_id' => $request->user_id ?? 0,
                 'user_first_name' => $name,
-                'paid_amount' => 0,
+                'paid_amount' => $subTotal,
                 'user_address_1' => $request->address_line_one,
                 'user_mobile' => $request->mobile,
             ];

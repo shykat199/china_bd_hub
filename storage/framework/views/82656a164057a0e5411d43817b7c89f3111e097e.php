@@ -1,6 +1,5 @@
-@extends('backend.layouts.app')
-@push('css')
-    @include('backend.includes.datatable_css')
+<?php $__env->startPush('css'); ?>
+    <?php echo $__env->make('backend.includes.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     <style>
         .card{
@@ -33,13 +32,13 @@
             margin: 2px 0;
         }
     </style>
-@endpush
-@section('content')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
 
 <div class="row mt-2">
     <div class="col-12">
         <div class="page-title-box">
-            <h4 class="page-title">Edit Order {{$order->order_no}}</h4>
+            <h4 class="page-title">Edit Order <?php echo e($order->order_no); ?></h4>
         </div>
     </div>
 </div>
@@ -48,8 +47,8 @@
 
     <div class="card">
         <div class="card-body">
-            <form action="{{route('backend.update-custom-order',$order->order_no)}}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('backend.update-custom-order',$order->order_no)); ?>" method="POST">
+                <?php echo csrf_field(); ?>
 
                 <div class="container mt-4">
                     <div class="card shadow-sm">
@@ -60,15 +59,22 @@
                                 <label class="form-label fw-semibold">Products *</label>
                                 <select name="product_id" id="productSelect" class="form-select">
                                     <option value="">Select Product..</option>
-                                    @foreach($products as $value)
-                                        <option value="{{$value->id}}">{{$value->name}}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($value->id); ?>"><?php echo e($value->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
-                                @error('product_id')
+                                <?php $__errorArgs = ['product_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                 <span class="invalid-feedback" role="alert">
-                                         <strong>{{ $message }}</strong>
+                                         <strong><?php echo e($message); ?></strong>
                                         </span>
-                                @enderror
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <!-- Products Table -->
@@ -86,51 +92,53 @@
                                     </tr>
                                     </thead>
                                     <tbody id="cartTable">
-                                    @foreach($order->details as $details)
-{{--                                        @dd($details)--}}
-                                        <tr id="row-{{$details->id}}">
+                                    <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $details): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+                                        <tr id="row-<?php echo e($details->id); ?>">
                                             <td>
-                                                @foreach($details->product->images as $img)
-                                                    <img src="{{asset('uploads/products/galleries/'.$img->image)}}" class="me-1 mb-1 rounded" width="40" height="40">
-                                                @endforeach
+                                                <?php $__currentLoopData = $details->product->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <img src="<?php echo e(asset('uploads/products/galleries/'.$img->image)); ?>" class="me-1 mb-1 rounded" width="40" height="40">
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </td>
 
                                             <td>
-                                                {{$details->product->name}}
-                                                <input type="hidden" name="products[{{$details->product->id}}][id]" value="{{$details->id}}">
+                                                <?php echo e($details->product->name); ?>
+
+                                                <input type="hidden" name="products[<?php echo e($details->product->id); ?>][id]" value="<?php echo e($details->id); ?>">
                                             </td>
 
                                             <td>
                                                 <input type="number"
-                                                       name="products[{{$details->id}}][qty]"
+                                                       name="products[<?php echo e($details->id); ?>][qty]"
                                                        class="form-control form-control-sm text-center qty"
-                                                       value="{{$details->qty}}" min="1">
+                                                       value="<?php echo e($details->qty); ?>" min="1">
                                             </td>
 
                                             <td>
-                                                <input type="text" class="form-control form-control-sm text-end price" value="{{$details->sale_price}}" readonly>
+                                                <input type="text" class="form-control form-control-sm text-end price" value="<?php echo e($details->sale_price); ?>" readonly>
                                             </td>
 
                                             <td>
                                                 <input type="number"
-                                                       name="products[{{$details->id}}][discount]"
+                                                       name="products[<?php echo e($details->id); ?>][discount]"
                                                        class="form-control form-control-sm text-end discount"
-                                                       value="{{$details->discount}}" min="0">
+                                                       value="<?php echo e($details->discount); ?>" min="0">
                                             </td>
 
                                             <td class="fw-semibold text-end row-subtotal">
-                                                {{$details->total_price}}
+                                                <?php echo e($details->total_price); ?>
+
                                             </td>
 
                                             <td>
                                                 <button type="button"
                                                         class="btn btn-sm btn-danger remove-row text-white"
-                                                        data-id="{{$details->id}}">
+                                                        data-id="<?php echo e($details->id); ?>">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -141,52 +149,66 @@
                                 <!-- Customer Info -->
                                 <div class="col-md-6">
                                     <input type="text" name="shipping_name"
-                                           class="form-control mb-3" value="{{$order->shipping_name}}"
+                                           class="form-control mb-3" value="<?php echo e($order->shipping_name); ?>"
                                            placeholder="Shipping Name">
 
-{{--                                    <input type="text" name="first_name"--}}
-{{--                                           class="form-control mb-3" value="{{$order->customer->first_name}}"--}}
-{{--                                           placeholder="Customer First Name" required>--}}
-{{--                                    @error('first_name')--}}
-{{--                                    <span class="invalid-feedback" role="alert">--}}
-{{--                                             <strong>{{ $message }}</strong>--}}
-{{--                                            </span>--}}
-{{--                                    @enderror--}}
 
-{{--                                    <input type="text" name="last_name"--}}
-{{--                                           class="form-control mb-3" value="{{$order->customer->last_name}}"--}}
-{{--                                           placeholder="Customer Last Name" required>--}}
-{{--                                    @error('last_name')--}}
-{{--                                    <span class="invalid-feedback" role="alert">--}}
-{{--                                             <strong>{{ $message }}</strong>--}}
-{{--                                            </span>--}}
-{{--                                    @enderror--}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                     <input type="text" name="customer_number"
-                                           class="form-control mb-3" value="{{$order->customer->mobile}}"
+                                           class="form-control mb-3" value="<?php echo e($order->customer->mobile); ?>"
                                            placeholder="Customer Number" required>
-                                    @error('customer_number')
+                                    <?php $__errorArgs = ['customer_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                     <span class="invalid-feedback" role="alert">
-                                             <strong>{{ $message }}</strong>
+                                             <strong><?php echo e($message); ?></strong>
                                             </span>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
                                     <textarea name="address"
                                               class="form-control mb-3"
                                               rows="3"
-                                              placeholder="Address">{!! $order->shipping_address_1 !!}</textarea>
-                                    @error('address')
+                                              placeholder="Address"><?php echo $order->shipping_address_1; ?></textarea>
+                                    <?php $__errorArgs = ['address'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                     <span class="invalid-feedback" role="alert">
-                                             <strong>{{ $message }}</strong>
+                                             <strong><?php echo e($message); ?></strong>
                                             </span>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
 
                                     <select name="shipping_areas" id="shipping_areas_select" class="form-select mb-3">
                                         <option value="">Select area..</option>
-                                        @foreach($shipping_areas as $area)
-                                            <option data-charge = {{$area->charge}} value="{{$area->id}}">{{$area->name}} - charge {{$area->charge}}</option>
-                                        @endforeach
+                                        <?php $__currentLoopData = $shipping_areas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option data-charge = <?php echo e($area->charge); ?> value="<?php echo e($area->id); ?>"><?php echo e($area->name); ?> - charge <?php echo e($area->charge); ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
 
@@ -197,7 +219,7 @@
                                         <tr>
                                             <td>Sub Total</td>
                                             <td class="text-end">
-                                                <span class="sub-total sub-total">{{$totalPrice = $order->details->sum('total_price')}}</span>
+                                                <span class="sub-total sub-total"><?php echo e($totalPrice = $order->details->sum('total_price')); ?></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -206,7 +228,7 @@
                                                 <input type="number"
                                                        name="shipping_fee"
                                                        class="form-control form-control-sm text-end shipping_fee"
-                                                       value="{{$order->shipping_cost ?? 0}}">
+                                                       value="<?php echo e($order->shipping_cost ?? 0); ?>">
                                             </td>
                                         </tr>
                                         <tr class="fw-semibold">
@@ -216,19 +238,19 @@
                                                 <input type="text" readonly
                                                        name="order_coupon"
                                                        class="form-control form-control-sm text-end order_coupon"
-                                                       value="{{$order->coupon_discount ?? 0}}">
+                                                       value="<?php echo e($order->coupon_discount ?? 0); ?>">
                                             </td>
                                         </tr>
                                         <tr class="fw-semibold">
                                             <td>Total Price</td>
                                             <td class="text-end">
-                                                <span class="grand-total">{{ $order->total_price }}</span>
+                                                <span class="grand-total"><?php echo e($order->total_price); ?></span>
                                             </td>
 
                                             <input type="hidden"
                                                    name="grand_total"
                                                    class="form-control form-control-sm text-end grand_total"
-                                                   value="{{($order->shipping_cost ?? 0) + $order->total_price}}">
+                                                   value="<?php echo e(($order->shipping_cost ?? 0) + $order->total_price); ?>">
                                         </tr>
                                         </tbody>
                                     </table>
@@ -252,58 +274,58 @@
 </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
 <script>
 
-    {{--$(".checkall").on('change',function(){--}}
-    {{--    $(".checkbox").prop('checked',$(this).is(":checked"));--}}
-    {{--});--}}
-    {{--$(document).ready(function() {--}}
-    {{--    var order_id = @json($order->id);--}}
-    {{--    let typingTimer;--}}
-    {{--    const typingDelay = 1000; // 1 second delay--}}
+    
+    
+    
+    
+    
+    
+    
 
-    {{--    $('#search-product').on('input', function() {--}}
-    {{--        clearTimeout(typingTimer);--}}
-    {{--        typingTimer = setTimeout(function() {--}}
-    {{--            var keyword = $('#search-product').val();--}}
-    {{--            $.ajax({--}}
-    {{--                url: `{{ url('admin/order/add-product/search') }}`,--}}
-    {{--                data: {--}}
-    {{--                    name: keyword--}}
-    {{--                },--}}
-    {{--                dataType: "JSON",--}}
-    {{--                success: function(res) {--}}
-    {{--                    $('#show-product').html('');--}}
-    {{--                    res.forEach(element => {--}}
-    {{--                        $('#show-product').append(`--}}
-    {{--                            <a href="{{ url('admin/order/add-product/${order_id}/${element.id}') }}">--}}
-    {{--                                <li class="list-group-item">--}}
-    {{--                                    <p style="display:block">${element.name}</p>--}}
-    {{--                                </li>--}}
-    {{--                            </a>--}}
-    {{--                        `)--}}
-    {{--                    });--}}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    {{--                    // console.log(res);--}}
-    {{--                }--}}
-    {{--            });--}}
-    {{--        }, typingDelay);--}}
-    {{--    });--}}
+    
+    
+    
+    
+    
 
-    {{--    // Clear the timeout if the user starts typing again before the delay is over--}}
-    {{--    $('#search-product').on('keydown', function() {--}}
-    {{--        clearTimeout(typingTimer);--}}
-    {{--    });--}}
-    {{--});--}}
+    
+    
+    
+    
+    
 </script>
 
 <script>
     $(document).ready(function () {
 
-        const productUrl = "{{ route('backend.create-order-getProduct', ':id') }}";
+        const productUrl = "<?php echo e(route('backend.create-order-getProduct', ':id')); ?>";
 
         $('#productSelect').on('change', function () {
 
@@ -470,4 +492,6 @@
 
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/OrderManagement/Resources/views/orders/edit_order.blade.php ENDPATH**/ ?>

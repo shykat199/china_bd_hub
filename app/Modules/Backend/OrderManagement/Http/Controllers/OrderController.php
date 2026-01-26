@@ -1992,6 +1992,8 @@ class OrderController extends Controller
 
         $order_details->order_stat = $request->order_stat;
         $order_details->save();
+        $order->order_status = $request->order_stat;
+        $order->save();
 
         return response()->json([
             'redirect' => url()->previous(),
