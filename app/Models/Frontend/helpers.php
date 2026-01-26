@@ -14,6 +14,8 @@ use App\Models\Frontend\Promotion;
 use App\Models\Frontend\OrderDetail;
 use App\Models\Frontend\OrderStatus;
 use App\Models\Frontend\ProductReview;
+use App\Modules\Backend\CustomerManagement\Entities\Customer;
+use App\Modules\Backend\SellerManagement\Entities\Seller;
 use Illuminate\Support\Facades\Cookie;
 use App\Models\Frontend\PaymentGateway;
 use Illuminate\Support\Facades\Storage;
@@ -362,6 +364,12 @@ function orderCount(int $stat=0): int
     }
 
     return $orders->count();
+}
+
+function sumOfOrder()
+{
+    $orders = \App\Models\Frontend\OrderDetail::query()->where('user_id',auth()->guard('customer')->id())->sum('sale_price');
+    return $orders;
 }
 
 /**

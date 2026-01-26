@@ -55,6 +55,21 @@
                                     <p class="maan-counter-content">{{ __('Order Canceled') }}</p>
                                 </div>
                             </a>
+
+                            @php
+
+                            @endphp
+                            <a href="javascript:orderList(7)" class="maan-counter-box">
+                                <div class="maan-icon maan-radius maan-icon-clr-lightred">
+                                    <i> <img src="{{ asset('customer/img/icons/money-com.svg') }}" alt="Icon"></i>
+                                </div>
+                                <div class="maan-desc">
+                                    <div class="maan-counter">
+                                        <span class="maan-counter-title counter">{{ number_format(sumOfOrder(),2) }}</span> TK
+                                    </div>
+                                    <p class="maan-counter-content">{{ __('Total Order Amount') }}</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>

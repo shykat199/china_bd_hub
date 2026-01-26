@@ -14,12 +14,12 @@
                             </div>
                             <form action="{{ route('backend.variant.store') }}" class="d-flex gap-1" style="width: 100%" method="POST">
                                 @csrf
-                                <div style="width: 50%">
-                                    <input type="text" class="form-control" name="color" placeholder="Color Name" value="{{ old('color') }}">
+                                <div style="width: 80%; height: 20%">
+                                    <input type="text" class="form-control" name="color" placeholder="Color Name" value="{{ old('color') }}" required>
                                     <span class="text-danger">@error('color'){{ $message }}@enderror</span>
                                 </div>
-                                <div style="width: 50%">
-                                    <input type="text" class="form-control" name="hex" placeholder="Hex Code" value="{{ old('hex') }}">
+                                <div style="width: 20%">
+                                    <input type="color" class="form-control" name="hex" placeholder="Hex Code" value="{{ old('hex') }}" required>
                                     <span class="text-danger">@error('hex'){{ $message }}@enderror</span>
                                 </div>
                                 <div>

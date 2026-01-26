@@ -509,7 +509,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::with('details', 'images', 'video', 'productstock')->findOrFail($id);
+        $product = Product::with(['details', 'images', 'video', 'productstock'=>function ($query) {
+        $query->whereNotNull('quantities');
+    }])->findOrFail($id);
         $categories = Category::select('id', 'name', 'category_id')->where('is_active', 1)->orderBy('id', 'asc')->get();
         $categories = $this->decendentCategory($categories->toArray());
         $categories = json_decode(json_encode($categories), FALSE);
@@ -525,7 +527,7 @@ class ProductController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -757,8 +759,6 @@ class ProductController extends Controller
                         $product_stock->update($variant);
                     }
                 }
-
-
 
                 $product->update($data);
 

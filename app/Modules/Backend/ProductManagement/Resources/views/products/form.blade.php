@@ -248,7 +248,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Product VAreation') }}</h5>
+                    <h5>{{ __('Product Variation') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="accordion mb-4" id="accordionExample">
@@ -354,22 +354,6 @@
                                 <input name="quantity" id="available_qty" min="1" type="number" class="form-control" placeholder="0" value="{{ $product->quantity }}" required>
                             </div>
                         </div>
-                        {{-- <div class="col-lg-4">
-                            <p>{{ __('Shipping Cost(Inside Dhaka)') }}</p>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="input-group overflow-visible">
-                                <input name="shipping_cost" min="0" type="number" class="form-control" placeholder="0" value="{{ $product->shipping_cost }}">
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <p>{{ __('Shipping Cost(Outside Dhaka)') }}</p>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="input-group overflow-visible">
-                                <input name="outside_shipping_cost" min="0" type="number" class="form-control" placeholder="0" value="{{ $product->outside_shipping_cost }}">
-                            </div>
-                        </div> --}}
                         <div class="col-lg-4">
                             <p>{{ __('Attributes') }}</p>
                         </div>
@@ -399,8 +383,8 @@
                         <div class="col-lg-12">
                             <textarea name="description" class="editor" id="textEditor">
                                 @if ($product->description != "''")
-{{ $product->description }}@else{{ old('description') }}
-@endif
+                                    {{ $product->description }}@else{{ old('description') }}
+                                @endif
                             </textarea>
                         </div>
                     </div>
@@ -453,9 +437,9 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <textarea name="meta_description" class="form-control"> @if ($product->meta_description)
-{{ $product->meta_description }}@else{{ old('meta_description') }}
-@endif
-</textarea>
+                                {{ $product->meta_description }}@else{{ old('meta_description') }}
+                                @endif
+                                </textarea>
                             </div>
                         </div>
                         <div class="col-lg-4">

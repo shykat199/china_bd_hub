@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Helpers\NotifyHelper;
 use App\Mail\OrderPending;
+use App\Models\Backend\Admin;
+use App\Modules\Backend\CustomerManagement\Entities\Customer;
+use App\Modules\Backend\SellerManagement\Entities\Seller;
 use Illuminate\Http\Request;
 use App\Models\Frontend\Order;
 use App\Models\Frontend\Product;
@@ -96,16 +99,26 @@ class GuestPaymentController extends Controller
                 'message' => __('The cart is empty.'),
             ], 404);
         }
+        $adminAuthUser = auth()->guard('admin')->user();
+        $customerAuthUser = auth()->guard('customer')->user();
+        $sellerAuthUser = auth()->guard('seller')->user();
 
-        // Create or update user
-        $user = User::updateOrCreate(
-            ['mobile' => $request->mobile],
-            [
-                'first_name' => $request->first_name,
-                'address' => $request->billing_address,
-                'username' => $request->mobile,
-            ]
-        );
+        if ($adminAuthUser) {
+            $user = \App\Models\Backend\Admin::where('id', $adminAuthUser->id)->first();
+        } elseif ($customerAuthUser) {
+            $user = \App\Models\Frontend\User::where('id', $customerAuthUser->id)->first();
+        } elseif ($sellerAuthUser) {
+            $user = \App\Models\Frontend\Seller::where('id', $sellerAuthUser->id)->first();
+        } else {
+            $user = User::updateOrCreate(
+                ['mobile' => $request->mobile],
+                [
+                    'first_name' => $request->first_name,
+                    'address' => $request->billing_address,
+                    'username' => $request->mobile,
+                ]
+            );
+        }
 
         $user_id = $user->id;
         $request['user_id'] = $user_id;
