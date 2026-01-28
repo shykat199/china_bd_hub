@@ -18,6 +18,15 @@ use App\Http\Controllers\Frontend\ProductReviewController;
 use App\Http\Controllers\Frontend\WishlistController;
 use Illuminate\Support\Facades\Route;
 
+
+//Route::get('/test-mail', function () {
+//    Mail::raw('Mail works now 🎉', function ($message) {
+//        $message->to('shykat@pfecglobal.com')
+//            ->subject('Test Mail');
+//    });
+//});
+
+
 Route::fallback(function () {
     abort(404);
 });

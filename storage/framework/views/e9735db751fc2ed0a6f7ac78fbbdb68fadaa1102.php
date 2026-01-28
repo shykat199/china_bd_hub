@@ -32,8 +32,20 @@
                         <div class="row">
                             <div class="col-sm-6 mt-3">
                                 <div class="input-group">
-                                    <label for="first_name"><?php echo e(__('Full name')); ?></label>
+                                    <label for="first_name"><?php echo e(__('First name')); ?></label>
                                     <input type="text" class="d-block w-100" name="first_name" value="<?php echo e($user->first_name); ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3">
+                                <div class="input-group">
+                                    <label for="last_name"><?php echo e(__('Last Name')); ?></label>
+                                    <input type="text" class="d-block w-100" name="last_name" value="<?php echo e($user->last_name); ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3">
+                                <div class="input-group">
+                                    <label for="username"><?php echo e(__('Username')); ?></label>
+                                    <input type="text" class="d-block w-100" name="username" value="<?php echo e($user->username); ?>" required>
                                 </div>
                             </div>
                             <div class="col-sm-6 mt-3">
@@ -46,12 +58,6 @@
                                 <div class="input-group">
                                     <label for="mobile"><?php echo e(__('Contact Number')); ?></label>
                                     <input type="text" class="d-block w-100" name="mobile" value="<?php echo e($user->mobile); ?>" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 mt-3">
-                                <div class="input-group">
-                                    <label for="email"><?php echo e(__('Email Address')); ?></label>
-                                    <input type="email" class="d-block w-100" name="email" value="<?php echo e($user->email); ?>" <?php echo e(!empty($user->email) ? 'readonly' : ''); ?>>
                                 </div>
                             </div>
                             <div class="col-sm-6 mt-3">

@@ -64,11 +64,11 @@
 
     <div class="email-body">
         <p><?php echo e(__('You are having this email because you have requested for a password reset.')); ?></p>
-        <p><?php echo e(__('Your verification code is: ')); ?><b><?php echo e($data['code']); ?></b></p>
+        <p><?php echo e(__('Your verification code is: ')); ?><b><?php echo e($code); ?></b></p>
 
         <p><?php echo e(__('Click the button below to go to password reset page.')); ?></p>
 
-        <p><a href="<?php echo e(url($data['url'])); ?>" class="email-btn"><?php echo e(__('Password Reset Link')); ?></a></p>
+        <p><a href="<?php echo e(url($url)); ?>" class="email-btn"><?php echo e(__('Password Reset Link')); ?></a></p>
 
         <p><?php echo e(__('This password reset link will expire in 60 minutes.')); ?></p>
 
@@ -79,7 +79,7 @@
 
     <hr>
 
-    <p class="email-footer"><?php echo e(__('If you\'re having trouble clicking the "Password Reset Link" button, copy and paste the URL below into your web browser')); ?>: <span class="hyper-link"><?php echo e($data['url']); ?></span></p>
+    <p class="email-footer"><?php echo e(__('If you\'re having trouble clicking the "Password Reset Link" button, copy and paste the URL below into your web browser')); ?>: <span class="hyper-link"><?php echo e($url); ?></span></p>
     <p class="copyright">&copy; <?php echo e(config('app.name')); ?>. <?php echo e(__('All right reserved')); ?>.</p>
 </div>
 </body>
