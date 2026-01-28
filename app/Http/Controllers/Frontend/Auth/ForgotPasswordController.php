@@ -36,14 +36,15 @@ class ForgotPasswordController extends Controller
           'email' => 'required|exists:users,email'
         ]);
 
-
+        // Generate password reset verification code and expire date for
+        // the verification code. The code and the expiry date will store in
+        // database. The verification code won't work after the expiry date.
         $code = random_int(100000,999999);
         $expire = now()->addHour();
         $user = User::query()
             ->where('email',$request->email)
             ->orWhere('mobile',$request->email)
             ->first();
-
         $user->update(['verification_code'=>$code,'verification_expire_at'=>$expire]);
 
         $url = url('customer/password/reset');

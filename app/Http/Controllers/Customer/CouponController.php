@@ -44,14 +44,12 @@ class CouponController extends Controller
         $discount = $coupon->discount;
 
         if ($coupon->type == 'cart') {
-            $details = json_decode($coupon->details);
 
             $subTotal = session('subTotal', 0);
             $totalShipping = session('totalShipping', 0);
 
             if ($coupon->discount_type == 'percent') {
-                $discount =  ($subTotal + $totalShipping) * ($discount / 100);
-
+                $discount =  ($subTotal * ($discount / 100));
             }
         }
         else {
@@ -80,11 +78,15 @@ class CouponController extends Controller
             }
         }
 
-        $total = ($subTotal + $totalShipping) - $discount;
+        $total = ($subTotal - $discount) + $totalShipping;
 
-        Cookie::queue(Cookie::make('coupon_infos', $coupon, 120));
-        Cookie::queue(Cookie::make('coupon_id', $coupon->id, 120));
-        Cookie::queue(Cookie::make('coupon_discount', $discount, 120));
+//        Cookie::queue(Cookie::make('coupon_infos', $coupon, 120));
+//        Cookie::queue(Cookie::make('coupon_id', $coupon->id, 120));
+//        Cookie::queue(Cookie::make('coupon_discount', $discount, 120));
+
+        session()->put('coupon_infos', $coupon);
+        session()->put('coupon_id', $coupon->id);
+        session()->put('coupon_discount', $discount);
 
         return response()->json([
             'message' => __('The coupon has been applied'),

@@ -30,7 +30,7 @@ class PasswordReset extends Mailable
     public function build()
     {
         return $this->subject('Reset Password Notification')
-            ->from('chinahub.com','China Hub')
+            ->from('live-test@mybazar.maantheme.com','My Bazaar')
             ->view('frontend.mail.password-reset')
             ->with([
                 'data'=>$this->data

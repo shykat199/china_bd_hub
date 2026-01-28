@@ -259,24 +259,29 @@
                                                     <td>{{$detail->sale_price??'N/A'}}</td>
                                                     <td>{{$detail->total_price??'N/A'}}</td>
                                                     <td>
+                                                        @php
+                                                            $orderStatus = $detail->order->order_status
+                                                        @endphp
                                                         <div class="invoice-title">
                                                             <h6>
-                                                                @if (optional($detail->orderStatus)->name == 'PENDING')
-                                                                    <span class="badge bg-warning">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'CONFIRMED')
-                                                                    <span class="badge bg-info">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'PROCESSING')
-                                                                    <span class="badge bg-primary">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'PICKED')
-                                                                    <span class="badge bg-secondary">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'SHIPPED')
-                                                                    <span class="badge bg-light text-dark border">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'DELIVERED')
-                                                                    <span class="badge bg-success">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'CANCELLED')
-                                                                    <span class="badge bg-danger">{{ $detail->orderStatus->name ?? '' }}</span>
-                                                                @elseif (optional($detail->orderStatus)->name == 'RETURNED')
-                                                                    <span class="badge bg-dark">{{ $detail->orderStatus->name ?? '' }}</span>
+                                                                @if ($orderStatus == 1)
+                                                                    <span class="badge bg-warning">Pending</span>
+                                                                @elseif ($orderStatus == 2)
+                                                                    <span class="badge bg-info">Confirmed</span>
+                                                                @elseif ($orderStatus == 3)
+                                                                    <span class="badge bg-primary">Processing</span>
+                                                                @elseif ($orderStatus == 4)
+                                                                    <span class="badge bg-secondary">Picked</span>
+                                                                @elseif ($orderStatus == 5)
+                                                                    <span class="badge bg-light text-dark border">Shipped</span>
+                                                                @elseif ($orderStatus == 6)
+                                                                    <span class="badge bg-success">Delivered</span>
+                                                                @elseif ($orderStatus == 7)
+                                                                    <span class="badge bg-danger">Cancelled</span>
+                                                                @elseif ($orderStatus == 8)
+                                                                    <span class="badge bg-dark">Returned</span>
+                                                                @else
+                                                                    <span class="badge bg-info">In Courier</span>
                                                                 @endif
                                                             </h6>
                                                         </div>
@@ -291,15 +296,15 @@
                                             </tbody>
                                         </table>
                                     </div>
+{{--                                    @dd($order)--}}
                                     <div class="mybazar-total-info">
                                         <ul>
-
                                             <li>{{__('Item(s) Subtotal')}}
                                                 :<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
                                             <li>{{__('Shipping Charge')}}
                                                 :<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
                                             <li>-------------------------------------------</li>
-                                            <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
+                                            <li>{{__('SubTotal')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
                                             <li>{{__('Coupon')}}:<span>{{ number_format($order->discount,2) }} ৳</span></li>
                                             <li>-------------------------------------------</li>
                                             <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
@@ -358,14 +363,16 @@
                             <div class="mb-3 form-group input-group row">
                                 <label for="message-text" class="col-form-label col-md-4">{{ __('Status') }}</label>
                                 <select name="order_stat" class="form-control col-md-6" required>
-                                    <option value="">{{ __('Select Status') }}</option>
-                                    <option value="1">{{ __('Pending') }}</option>
-                                    <option value="2">{{ __('Confirmed') }}</option>
-                                    <option value="3">{{ __('Processing') }}</option>
-                                    <option value="4">{{ __('Picked') }}</option>
-                                    <option value="5">{{ __('Shipped') }}</option>
-                                    <option value="6">{{ __('Delivered') }}</option>
-                                    <option value="7">{{ __('Cancelled') }}</option>
+                                    <option  value="">{{ __('Select Status') }}</option>
+                                    <option {{$order->order_status == '1' ? 'selected' : ''}} value="1">{{ __('Pending') }}</option>
+                                    <option {{$order->order_status == '3' ? 'selected' : ''}} value="3">{{ __('Processing') }}</option>
+                                    <option {{$order->order_status == '2' ? 'selected' : ''}} value="2">{{ __('Confirmed') }}</option>
+                                    <option {{$order->order_status == '9' ? 'selected' : ''}} value="9">{{ __('In Courier') }}</option>
+                                    <option {{$order->order_status == '4' ? 'selected' : ''}} value="4">{{ __('Picked') }}</option>
+                                    <option {{$order->order_status == '5' ? 'selected' : ''}} value="5">{{ __('Shipped') }}</option>
+                                    <option {{$order->order_status == '7' ? 'selected' : ''}} value="7">{{ __('Cancelled') }}</option>
+                                    <option {{$order->order_status == '6' ? 'selected' : ''}} value="6">{{ __('Delivered') }}</option>
+                                    <option {{$order->order_status == '8' ? 'selected' : ''}} value="8">{{ __('Returned') }}</option>
                                 </select>
                             </div>
                             <div class="mb-3 form-group input-group row">

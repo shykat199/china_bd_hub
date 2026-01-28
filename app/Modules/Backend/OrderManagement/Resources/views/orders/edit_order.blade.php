@@ -210,7 +210,17 @@
                                             </td>
                                         </tr>
                                         <tr class="fw-semibold">
-                                            <td>Total</td>
+                                            <td>Coupon Discount</td>
+                                            <td class="text-end">
+
+                                                <input type="text" readonly
+                                                       name="order_coupon"
+                                                       class="form-control form-control-sm text-end order_coupon"
+                                                       value="{{$order->coupon_discount ?? 0}}">
+                                            </td>
+                                        </tr>
+                                        <tr class="fw-semibold">
+                                            <td>Total Price</td>
                                             <td class="text-end">
                                                 <span class="grand-total">{{ $order->total_price }}</span>
                                             </td>
@@ -416,6 +426,7 @@
 
             let subTotal = 0;
             let shippingFee = parseFloat($('input[name="shipping_fee"]').val()) || 0;
+            let orderCoupon = parseFloat($('input[name="order_coupon"]').val()) || 0;
 
             $('#cartTable tr').each(function () {
 
@@ -434,7 +445,7 @@
                 subTotal += rowSubTotal;
             });
 
-            let grandTotal = subTotal + shippingFee;
+            let grandTotal = ((subTotal - orderCoupon) + shippingFee);
 
             $('.sub-total').text(subTotal.toFixed(2));
             $('.grand-total').text(grandTotal.toFixed(2));

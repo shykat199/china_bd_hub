@@ -75,7 +75,7 @@ class CustomerController extends Controller
     {
         $this->validate($request, [
             'first_name' => 'required',
-            'last_name' => 'nullable',
+            'last_name' => 'required',
             'mobile' => ['required', 'string', Rule::unique('users')->ignore($id)],
             'dob' => 'required|date',
             'old_password' => 'nullable',
