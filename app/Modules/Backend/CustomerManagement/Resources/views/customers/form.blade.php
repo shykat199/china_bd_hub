@@ -4,23 +4,10 @@
     </div>
     <div class="col-lg-7">
         <div class="input-group">
-            <input name="first_name" type="text" required class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" value="@if($customer->first_name){{$customer->first_name}}@else{{ old('first_name') }}@endif" placeholder="First Name">
+            <input name="first_name" type="text" required class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" value="@if($customer->first_name){{$customer->first_name}}@else{{ old('first_name') }}@endif" placeholder="Full Name">
             @if ($errors->has('first_name'))
                 <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('first_name') }}</strong>
-                </span>
-            @endif
-        </div>
-    </div>
-    <div class="col-lg-3">
-        <p>{{__('Last Name')}} <span class="text-red">*</span></p>
-    </div>
-    <div class="col-lg-7">
-        <div class="input-group">
-            <input name="last_name" type="text" class="form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}" value="@if($customer->last_name){{$customer->last_name}}@else{{ old('last_name') }}@endif" placeholder="Last Name">
-            @if ($errors->has('last_name'))
-                <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('last_name') }}</strong>
                 </span>
             @endif
         </div>
@@ -47,20 +34,6 @@
             <input name="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="@if($customer->email){{$customer->email}}@else{{ old('email') }}@endif" placeholder="Email" required>
             @error('email')
             <label id="email-error" class="invalid-feedback error" for="email">{{$message}}</label>
-            @enderror
-        </div>
-    </div>
-    <div class="col-lg-3">
-        <p>{{__('Username')}}<span class="text-red">*</span></p>
-    </div>
-    <div class="col-lg-7">
-        <div class="input-group">
-            <input name="username" type="text"
-                   class="form-control {{ $errors->has('username') ? ' is-invalid' : '' }}"
-                   value="@if($customer->username){{$customer->username}}@else{{ old('username') }}@endif"
-                   placeholder="Username" required>
-            @error('username')
-            <label id="username-error" class="invalid-feedback error" for="username">{{$message}}</label>
             @enderror
         </div>
     </div>

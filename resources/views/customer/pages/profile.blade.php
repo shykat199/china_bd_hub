@@ -34,20 +34,8 @@
                         <div class="row">
                             <div class="col-sm-6 mt-3">
                                 <div class="input-group">
-                                    <label for="first_name">{{ __('First name') }}</label>
+                                    <label for="first_name">{{ __('Full name') }}</label>
                                     <input type="text" class="d-block w-100" name="first_name" value="{{ $user->first_name }}" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 mt-3">
-                                <div class="input-group">
-                                    <label for="last_name">{{ __('Last Name') }}</label>
-                                    <input type="text" class="d-block w-100" name="last_name" value="{{ $user->last_name }}" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 mt-3">
-                                <div class="input-group">
-                                    <label for="username">{{ __('Username') }}</label>
-                                    <input type="text" class="d-block w-100" name="username" value="{{ $user->username }}" required>
                                 </div>
                             </div>
                             <div class="col-sm-6 mt-3">
@@ -60,6 +48,12 @@
                                 <div class="input-group">
                                     <label for="mobile">{{ __('Contact Number') }}</label>
                                     <input type="text" class="d-block w-100" name="mobile" value="{{ $user->mobile }}" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3">
+                                <div class="input-group">
+                                    <label for="email">{{ __('Email Address') }}</label>
+                                    <input type="email" class="d-block w-100" name="email" value="{{ $user->email }}" {{!empty($user->email) ? 'readonly' : ''}}>
                                 </div>
                             </div>
                             <div class="col-sm-6 mt-3">
