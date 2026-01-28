@@ -153,8 +153,8 @@ class CustomerController extends Controller
         try {
             $request->validate([
                 'first_name' => ['required', 'string', 'max:125'],
-                'last_name' => ['required', 'string', 'max:125'],
-                'username' => ['required', 'string', 'max:115'],
+                'last_name' => ['nullable', 'string', 'max:125'],
+                'username' => ['nullable', 'string', 'max:115'],
                 'mobile' => ['required'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['nullable', 'string', 'min:6', 'confirmed'],
@@ -283,9 +283,9 @@ class CustomerController extends Controller
         try {
             $request->validate([
                 'first_name' => ['required', 'string', 'max:125'],
-                'last_name' => ['required', 'string', 'max:125'],
-                'username' => ['required', 'string', 'max:115'],
-                'mobile' => ['required'],
+                'last_name' => ['nullable', 'string', 'max:125'],
+                'username' => ['nullable', 'string', 'max:115'],
+                'mobile' => ['required','unique:users,mobile,'. $id],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'. $id],
                 'password' => ['nullable', 'string', 'min:6', 'confirmed'],
             ]);
