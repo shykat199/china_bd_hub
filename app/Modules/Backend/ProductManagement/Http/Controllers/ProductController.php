@@ -795,7 +795,8 @@ class ProductController extends Controller
                     $video_data = $request->only(['video_provider', 'video_link']);
                     if ($product->has('video')) {
                         $product->video()->update($video_data);
-                    } else {
+                    }
+                    else {
                         $product->video()->create($video_data);
                     }
                 }
@@ -805,9 +806,9 @@ class ProductController extends Controller
                     $this->deleteImage($image_ids, $product->id);
                 else
                     $this->deleteImage([], $product->id);
-                $images = $request->file('images');
+
                 if ($request->hasFile('images')) {
-                    $this->createProductImage($images, $product);
+                    $this->createProductImage($request->file('images'), $product, $position);
                 }
 
                 return response()->json([
@@ -897,37 +898,79 @@ class ProductController extends Controller
 
     /* product image creation */
 
-    private function createProductImage($images, $product)
+//    private function createProductImage($images, $product)
+//    {
+//        $image_data = [];
+//        foreach ($images as $key => $image) {
+//            $image_path = Storage::putFile('products/galleries', $image);
+//            $pattern = "/products\/galleries\//";
+//            $image_path = preg_replace($pattern, '', $image_path);
+//            $image_data['image'] = $image_path;
+//            $product->images()->create($image_data);
+//        }
+//    }
+
+    private function createProductImage($images, $product, &$position)
     {
-        $image_data = [];
-        foreach ($images as $key => $image) {
+        foreach ($images as $image) {
+
             $image_path = Storage::putFile('products/galleries', $image);
-            $pattern = "/products\/galleries\//";
-            $image_path = preg_replace($pattern, '', $image_path);
-            $image_data['image'] = $image_path;
-            $product->images()->create($image_data);
+            $image_path = str_replace('products/galleries/', '', $image_path);
+
+            $product->images()->create([
+                'image'    => $image_path,
+                'position' => $position++
+            ]);
         }
     }
 
-    private function deleteImage($image_ids, $id)
+//    private function deleteImage($image_ids, $id)
+//    {
+//        $old_image_ids = ProductImage::where('product_id', $id)->pluck('id')->toArray();
+//        foreach ($image_ids as $key => $image_id) {
+//            if ($image_id) {
+//                if (($index = array_search($image_id, $old_image_ids)) !== false) {
+//                    unset($old_image_ids[$index]);
+//                }
+//            }
+//        }
+//        foreach ($old_image_ids as $image_id) {
+//            $img = ProductImage::find($image_id);
+//            //delete from disk
+//            if ($img) {
+//                if (file_exists(storage_path('app/public/products/galleries/') . $img->image)) {
+//                    Storage::delete('products/galleries/' . $img->image);
+//                }
+//                $img->delete();
+//            }
+//        }
+//    }
+
+    private function deleteImage(array $keptImageIds, int $productId)
     {
-        $old_image_ids = ProductImage::where('product_id', $id)->pluck('id')->toArray();
-        foreach ($image_ids as $key => $image_id) {
-            if ($image_id) {
-                if (($index = array_search($image_id, $old_image_ids)) !== false) {
-                    unset($old_image_ids[$index]);
-                }
-            }
+        // All image IDs currently in DB
+        $existingImageIds = ProductImage::where('product_id', $productId)
+            ->pluck('id')
+            ->toArray();
+
+        // Images to delete = DB images NOT in kept images
+        $imagesToDelete = array_diff($existingImageIds, $keptImageIds);
+
+        if (empty($imagesToDelete)) {
+            return;
         }
-        foreach ($old_image_ids as $image_id) {
-            $img = ProductImage::find($image_id);
-            //delete from disk
-            if ($img) {
-                if (file_exists(storage_path('app/public/products/galleries/') . $img->image)) {
-                    Storage::delete('products/galleries/' . $img->image);
-                }
-                $img->delete();
+
+        $images = ProductImage::whereIn('id', $imagesToDelete)->get();
+
+        foreach ($images as $img) {
+
+            // Delete file from storage
+            if (Storage::exists('products/galleries/' . $img->image)) {
+                Storage::delete('products/galleries/' . $img->image);
             }
+
+            // Delete DB row
+            $img->delete();
         }
     }
 

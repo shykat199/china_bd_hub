@@ -236,7 +236,7 @@
         })
     }
 
-    function addToCart(id) {
+    function addToCart(id, minimum_qty = 0) {
         var csrf = "<?php echo e(csrf_token()); ?>";
         var courier = $('#courier').val();
         var qty = $('.input-number').val();
@@ -246,6 +246,24 @@
         var size_id = $('input[name="size"]:checked').data('size_id');
         var color_id = $('input[name="color"]:checked').data('color_id');
         var shipping_area = $('input[name="delivery_charge"]:checked').val();
+
+        if (parseInt(qty) < minimum_qty) {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: 'Minimum quantity required',
+                text: 'Please order at least ' + minimum_qty + ' item(s).',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'my-toast'
+                }
+            });
+
+            return;
+        }
 
         $.ajax({
             url: "<?php echo e(route('customer.addToCart')); ?>",

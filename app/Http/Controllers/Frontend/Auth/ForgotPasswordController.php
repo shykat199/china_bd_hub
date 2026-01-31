@@ -54,7 +54,13 @@ class ForgotPasswordController extends Controller
             'url' => $url
         ];
 
-        Mail::to($request->email)->send(new PasswordReset($data));
+        $html = \Illuminate\Support\Facades\View::make('frontend.mail.password-reset', $data)->render();
+
+        Mail::raw($html, function ($message) use ($request) {
+            $message->to($request->email)
+                ->subject('Your Login OTP Code')
+                ->setContentType('text/html');
+        });
 
         return redirect()->route('customer.password.reset');
     }

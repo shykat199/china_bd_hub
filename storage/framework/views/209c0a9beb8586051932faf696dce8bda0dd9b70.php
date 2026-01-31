@@ -398,16 +398,13 @@
             });
         })
         $('#shipping_cost').on('change', function() {
-            var shipping_cost = $(this).val();
-            var sub_total = $('.sub-total').data('sub-total');
-            var grand_total = parseFloat(sub_total) + parseFloat(shipping_cost);
+            var shipping_cost = parseFloat($(this).val());
+            var sub_total = $('.sub-total').text().replace(/[৳,]/g, '').trim();
+            var total = $('.grand-total').text().replace(/[৳,]/g, '').trim();
+            var grand_total = parseFloat(sub_total) + shipping_cost;
 
-            // Format shipping_cost and grand_total to have 2 digits after the decimal point
-            shipping_cost = parseFloat(shipping_cost).toFixed(2);
-            grand_total = parseFloat(grand_total).toFixed(2);
-
-            $('.total-shipping').text('৳' + shipping_cost);
-            $('.grand-total').text('৳' + grand_total);
+            $('.total-shipping').text('৳' + shipping_cost.toLocaleString());
+            $('.grand-total').text('৳' + grand_total.toLocaleString());
 
             var csrf = "<?php echo e(@csrf_token()); ?>"
 

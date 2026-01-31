@@ -1159,11 +1159,30 @@
         })
     }
 
-    function addToCart(id){
+    function addToCart(id, minimum_qty = 0){
         var csrf = "{{ csrf_token() }}";
         var qty = $('.input-number').val();
         var color = $('input[name="color"]:checked').val();
         var size = $('input[name="size"]:checked').val();
+
+        if (parseInt(qty) < minimum_qty) {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: 'Minimum quantity required',
+                text: 'Please order at least ' + minimum_qty + ' item(s).',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'my-toast'
+                }
+            });
+
+            return;
+        }
+
         $.ajax({
             url: "{{ route('customer.addToCart') }}",
             data: {_token:csrf,id:id,qty:qty,color:color,size:size},

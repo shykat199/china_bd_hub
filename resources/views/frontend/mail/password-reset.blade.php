@@ -64,11 +64,11 @@
 
     <div class="email-body">
         <p>{{ __('You are having this email because you have requested for a password reset.') }}</p>
-        <p>{{ __('Your verification code is: ') }}<b>{{ $data['code'] }}</b></p>
+        <p>{{ __('Your verification code is: ') }}<b>{{ $code }}</b></p>
 
         <p>{{ __('Click the button below to go to password reset page.') }}</p>
 
-        <p><a href="{{ url($data['url']) }}" class="email-btn">{{ __('Password Reset Link') }}</a></p>
+        <p><a href="{{ url($url) }}" class="email-btn">{{ __('Password Reset Link') }}</a></p>
 
         <p>{{ __('This password reset link will expire in 60 minutes.') }}</p>
 
@@ -79,7 +79,7 @@
 
     <hr>
 
-    <p class="email-footer">{{ __('If you\'re having trouble clicking the "Password Reset Link" button, copy and paste the URL below into your web browser') }}: <span class="hyper-link">{{ $data['url'] }}</span></p>
+    <p class="email-footer">{{ __('If you\'re having trouble clicking the "Password Reset Link" button, copy and paste the URL below into your web browser') }}: <span class="hyper-link">{{ $url }}</span></p>
     <p class="copyright">&copy; {{ config('app.name') }}. {{ __('All right reserved') }}.</p>
 </div>
 </body>

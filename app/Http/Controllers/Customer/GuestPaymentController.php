@@ -94,6 +94,38 @@ class GuestPaymentController extends Controller
 
         $cart = session()->get('cart', []);
 
+
+        foreach ($cart as $pId => $item) {
+
+            $product = \App\Modules\Backend\ProductManagement\Entities\Product::find($pId);
+
+            if (!$product) {
+                continue;
+            }
+
+            if ((int) $item['quantity'] < (int) $product->minimum_qty) {
+
+                return response()->json([
+                    'message'  => __('Please order at least :qty item(s) for ":product".', [
+                        'qty' => $product->minimum_qty,
+                        'product' => $product->name
+                    ]),
+                    'redirect' => route('checkout') // or checkout page
+                ], 422);
+            }
+
+            if ((int) $item['quantity'] > (int) $item['product_stock']) {
+
+                return response()->json([
+                    'message'  => __('Only :stock item(s) available for ":product".', [
+                        'stock' => $item['product_stock'],
+                        'product' => $product->name
+                    ]),
+                    'redirect' => route('checkout')
+                ], 422);
+            }
+        }
+
         if (empty($cart)) {
             return response()->json([
                 'message' => __('The cart is empty.'),

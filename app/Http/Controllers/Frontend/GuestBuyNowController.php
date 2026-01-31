@@ -29,6 +29,11 @@ class GuestBuyNowController extends Controller
         abort_if(!$request->qty, 404);
         $shipping_areas = ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
         $product = Product::with('images')->findOrFail($request->product_id);
+
+        if ((int)$request->qty < $product->minimum_qty) {
+            return redirect()->back()->with('error', 'Please order at least ' . $product->minimum_qty . ' item(s).');
+        }
+
         session()->put('qty', $request->qty);
         session()->put('area', $request->area);
         session()->put('variation', [

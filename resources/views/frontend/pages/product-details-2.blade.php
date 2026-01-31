@@ -471,9 +471,10 @@
                             </div>
 
                         </div>
+{{--                        @dd($product)--}}
                         <div class="cart-button-wrapper">
                             {{-- @if ($product->quantity && $product->is_manage_stock) --}}
-                            <a href="javascript:addToCart({{ $product->id }})" class="btn maan-cartbtn m-2 @unless ($product->quantity && $product->is_manage_stock) disabled @endunless">{{ __('Add to Cart') }}</a>
+                            <a href="javascript:void(0)" onclick="addToCart({{ $product->id }},{{$product->minimum_qty}})" class="btn maan-cartbtn m-2 @unless ($product->quantity && $product->is_manage_stock) disabled @endunless">{{ __('Add to Cart') }}</a>
                             <a href="javascript:void(0)" data-buynow-url="{{ route('buynow.index', ['product_id' => $product->id]) }}" class="btn buynow-btn m-2 @unless ($product->quantity && $product->is_manage_stock) disabled @endunless">{{ __('Buy Now') }}</a>
                             <a href="javascript:addToWishlist({{ $product->id }})" class="maan-wishlist-btn m-2">
                                 <i class="fa-solid fa-heart"></i>
@@ -889,4 +890,23 @@
 
         });
     </script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: 'Minimum quantity required',
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'my-toast'
+                }
+            });
+        </script>
+    @endif
+
 @endpush

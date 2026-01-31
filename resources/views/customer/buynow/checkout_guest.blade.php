@@ -286,12 +286,13 @@
     })
     $('#shipping_cost').on('change', function() {
 
-        var shipping_cost = $(this).val();
-        var sub_total = $('.sub-total').text().replace('৳', '');
-        var total = $('.grand-total').text().replace('৳', '');
-        var grand_total = parseFloat(sub_total) + parseFloat(shipping_cost);
-        $('.total-shipping').text('৳' + shipping_cost);
-        $('.grand-total').text('৳' + grand_total);
+        var shipping_cost = parseFloat($(this).val());
+        var sub_total = $('.sub-total').text().replace(/[৳,]/g, '').trim();
+        var total = $('.grand-total').text().replace(/[৳,]/g, '').trim();
+        var grand_total = parseFloat(sub_total) + shipping_cost;
+
+        $('.total-shipping').text('৳' + shipping_cost.toLocaleString());
+        $('.grand-total').text('৳' + grand_total.toLocaleString());
 
         var csrf = "{{ @csrf_token() }}"
 

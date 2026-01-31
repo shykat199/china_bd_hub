@@ -470,9 +470,10 @@
                             </div>
 
                         </div>
+
                         <div class="cart-button-wrapper">
                             
-                            <a href="javascript:addToCart(<?php echo e($product->id); ?>)" class="btn maan-cartbtn m-2 <?php if (! ($product->quantity && $product->is_manage_stock)): ?> disabled <?php endif; ?>"><?php echo e(__('Add to Cart')); ?></a>
+                            <a href="javascript:void(0)" onclick="addToCart(<?php echo e($product->id); ?>,<?php echo e($product->minimum_qty); ?>)" class="btn maan-cartbtn m-2 <?php if (! ($product->quantity && $product->is_manage_stock)): ?> disabled <?php endif; ?>"><?php echo e(__('Add to Cart')); ?></a>
                             <a href="javascript:void(0)" data-buynow-url="<?php echo e(route('buynow.index', ['product_id' => $product->id])); ?>" class="btn buynow-btn m-2 <?php if (! ($product->quantity && $product->is_manage_stock)): ?> disabled <?php endif; ?>"><?php echo e(__('Buy Now')); ?></a>
                             <a href="javascript:addToWishlist(<?php echo e($product->id); ?>)" class="maan-wishlist-btn m-2">
                                 <i class="fa-solid fa-heart"></i>
@@ -815,6 +816,25 @@
 
         });
     </script>
+
+    <?php if(session('error')): ?>
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: 'Minimum quantity required',
+                text: "<?php echo e(session('error')); ?>",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'my-toast'
+                }
+            });
+        </script>
+    <?php endif; ?>
+
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('frontend.layouts.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/resources/views/frontend/pages/product-details-2.blade.php ENDPATH**/ ?>
