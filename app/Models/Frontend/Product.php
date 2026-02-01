@@ -49,6 +49,11 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->where('deleted_at',null);
     }
 
+    public function orderImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id')->orderBy('position', 'asc');
+    }
+
     /**
      * A product has one details
      *

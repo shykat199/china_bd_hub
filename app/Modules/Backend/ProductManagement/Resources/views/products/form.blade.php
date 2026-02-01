@@ -268,6 +268,8 @@
 
                                 <input type="file" id="imageInput" name="images[]" multiple accept="image/*" hidden>
 
+                                <input type="hidden" name="image_order" id="imageOrder">
+
                                 <div id="dropzone" class="custom-dropzone">
                                     <i class="iui-cloud-upload"></i>
                                     <p>Drag & drop images here or click to upload</p>
@@ -597,7 +599,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6>{{ __('Stock Visibility State') }}</h6>
@@ -706,7 +707,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6>{{ __('Flash Deal') }}</h6>
@@ -725,7 +725,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6>{{ __('Estimate Shipping Time') }}</h6>
@@ -782,7 +781,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6>{{ __('Vat & TAX') }}</h6>
@@ -798,7 +796,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -818,14 +815,12 @@
 @push('js')
     @include('productmanagement::products.product-js')
 
-{{--    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>--}}
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <script>
-
         let imagesList = [];
 
-        let preloadedImages = @json($product->images ?? []);
+        let preloadedImages = @json($product->orderImages ?? []);
 
         preloadedImages.forEach(img => {
             imagesList.push({
@@ -868,6 +863,7 @@
 
             renderPreviews();
             syncInputFiles();
+            updateImageOrderInput();
         }
 
         function renderPreviews() {
@@ -909,6 +905,7 @@
                     imagesList = reordered;
                     renderPreviews();
                     syncInputFiles();
+                    updateImageOrderInput();
                 }
             });
         }
@@ -918,6 +915,7 @@
             imagesList.splice(index, 1);
             renderPreviews();
             syncInputFiles();
+            updateImageOrderInput();
         });
 
         function syncInputFiles() {
@@ -932,7 +930,20 @@
             document.getElementById('imageInput').files = dt.files;
         }
 
+        function updateImageOrderInput() {
+            let order = [];
+
+            imagesList.forEach(img => {
+                if (img.type === 'old') {
+                    order.push(img.id);
+                }
+            });
+
+            $('#imageOrder').val(JSON.stringify(order));
+        }
+
         renderPreviews();
+        updateImageOrderInput();
     </script>
 
     <script>

@@ -1,6 +1,65 @@
 <?php $__env->startSection('title', 'Product - '); ?>
 <?php $__env->startPush('css'); ?>
     <link rel="stylesheet" href="<?php echo e(asset('plugins/image-uploader/image-uploader.min.css')); ?>">
+    <style>
+        .custom-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+
+        .custom-dropzone.drag-over {
+            background: #e0f2fe;
+            border-color: #0d6efd;
+        }
+
+        .custom-dropzone i {
+            font-size: 32px;
+            color: #0d6efd;
+        }
+
+        .image-preview-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .preview-image {
+            width: 80px;
+            height: 100px;
+            position: relative;
+            border-radius: 6px;
+            cursor: grab;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
 <?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
     <div class="content-body">
@@ -176,8 +235,22 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="sm-title-group">
-                                                    <div class="input-images"></div>
-                                                    <span class="sm-text product_image"><?php echo e(__('Use 330x430 size image for Best Fit.Minimum 1 and maximum 4 image.These images are visible in product details page gallery.')); ?></span>
+
+                                                    <input type="file" id="imageInput" name="images[]" multiple accept="image/*" hidden>
+
+                                                    <input type="hidden" name="image_order" id="imageOrder">
+
+                                                    <div id="dropzone" class="custom-dropzone">
+                                                        <i class="iui-cloud-upload"></i>
+                                                        <p>Drag & drop images here or click to upload</p>
+                                                    </div>
+
+                                                    <div id="previewContainer" class="image-preview-container"></div>
+
+                                                    <span class="sm-text product_image">
+                                                        Use 330x430 size image. Min 1, Max 4 images.
+                                                    </span>
+
                                                 </div>
                                             </div>
 
@@ -662,6 +735,136 @@
     <?php $__env->startPush('js'); ?>
         <?php echo $__env->make('productmanagement::products.product-js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <script src="<?php echo e(asset('plugins/image-uploader/image-uploader.min.js')); ?>"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+        <script>
+                let imagesList = [];
+
+                let preloadedImages = <?php echo json_encode($product->orderImages ?? [], 15, 512) ?>;
+
+                preloadedImages.forEach(img => {
+                    imagesList.push({
+                        type: 'old',
+                        id: img.id,
+                        src: `/uploads/products/galleries/${img.image}`
+                    });
+                });
+
+                $('#dropzone').on('click', () => $('#imageInput').click());
+
+                $('#dropzone').on('dragover', function (e) {
+                    e.preventDefault();
+                    $(this).addClass('drag-over');
+                });
+
+                $('#dropzone').on('dragleave drop', function (e) {
+                    e.preventDefault();
+                    $(this).removeClass('drag-over');
+                });
+
+                $('#dropzone').on('drop', function (e) {
+                    handleFiles(e.originalEvent.dataTransfer.files);
+                });
+
+                $('#imageInput').on('change', function (e) {
+                    handleFiles(e.target.files);
+                });
+
+                function handleFiles(files) {
+                    Array.from(files).forEach(file => {
+                        if (imagesList.length >= 4) return;
+
+                        imagesList.push({
+                            type: 'new',
+                            file: file,
+                            src: URL.createObjectURL(file)
+                        });
+                    });
+
+                    renderPreviews();
+                    syncInputFiles();
+                    updateImageOrderInput();
+                }
+
+                function renderPreviews() {
+                    $('#previewContainer').html('');
+
+                    imagesList.forEach((img, index) => {
+                        if (img.type === 'old') {
+                            $('#previewContainer').append(`
+                <div class="preview-image" data-index="${index}">
+                    <img src="${img.src}">
+                    <button class="remove-btn">×</button>
+                    <input type="hidden" name="old_images[]" value="${img.id}">
+                </div>
+            `);
+                        } else {
+                            $('#previewContainer').append(`
+                <div class="preview-image" data-index="${index}">
+                    <img src="${img.src}">
+                    <button class="remove-btn">×</button>
+                </div>
+            `);
+                        }
+                    });
+
+                    enableSorting();
+                }
+
+                function enableSorting() {
+                    $('#previewContainer').sortable({
+                        axis: 'x',
+                        tolerance: 'pointer',
+                        stop: function () {
+                            let reordered = [];
+
+                            $('.preview-image').each(function () {
+                                reordered.push(imagesList[$(this).data('index')]);
+                            });
+
+                            imagesList = reordered;
+                            renderPreviews();
+                            syncInputFiles();
+                            updateImageOrderInput();
+                        }
+                    });
+                }
+
+                $(document).on('click', '.remove-btn', function () {
+                    let index = $(this).closest('.preview-image').data('index');
+                    imagesList.splice(index, 1);
+                    renderPreviews();
+                    syncInputFiles();
+                    updateImageOrderInput();
+                });
+
+                function syncInputFiles() {
+                    const dt = new DataTransfer();
+
+                    imagesList.forEach(img => {
+                        if (img.type === 'new') {
+                            dt.items.add(img.file);
+                        }
+                    });
+
+                    document.getElementById('imageInput').files = dt.files;
+                }
+
+                function updateImageOrderInput() {
+                    let order = [];
+
+                    imagesList.forEach(img => {
+                        if (img.type === 'old') {
+                            order.push(img.id);
+                        }
+                    });
+
+                    $('#imageOrder').val(JSON.stringify(order));
+                }
+
+                renderPreviews();
+                updateImageOrderInput();
+            </script>
         <script>
                 $(document).on('input', '.variant-qty', function () {
                     let totalQty = 0;

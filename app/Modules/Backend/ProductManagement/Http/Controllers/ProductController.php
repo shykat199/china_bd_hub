@@ -212,7 +212,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // DB::beginTransaction();
+         DB::beginTransaction();
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:200', 'unique:products,name'],
@@ -441,10 +441,11 @@ class ProductController extends Controller
                     $product->video()->create($video_data);
                 }
                 $images = $request->file('images');
+                $position = 1;
                 if (count($images)) {
-                    $this->createProductImage($images, $product);
+                    $this->createProductImage($images, $product,$position);
                 }
-                // DB::commit();
+                 DB::commit();
                 return response()->json([
                     'redirect' => route('backend.products.index'),
                     'message' => __('Product created successfully.'),
@@ -802,13 +803,22 @@ class ProductController extends Controller
                 }
 
                 $image_ids = $request->input('old_images');
-                if ($image_ids)
-                    $this->deleteImage($image_ids, $product->id);
-                else
-                    $this->deleteImage([], $product->id);
+                $orderedOldImageIds = json_decode($request->image_order ?? '[]', true);
+                $this->deleteImage($orderedOldImageIds, $product->id);
+                $position = 1;
+
+                foreach ($orderedOldImageIds as $imageId) {
+                    ProductImage::where('id', $imageId)
+                        ->where('product_id', $product->id)
+                        ->update(['position' => $position++]);
+                }
 
                 if ($request->hasFile('images')) {
-                    $this->createProductImage($request->file('images'), $product, $position);
+                    $this->createProductImage(
+                        $request->file('images'),
+                        $product,
+                        $position
+                    );
                 }
 
                 return response()->json([

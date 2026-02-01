@@ -21,7 +21,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'category_id', 'brand_id', 'barcode', 'unit', 'minimum_qty', 'tags', 'courieres', 'is_refundable', 'attributes', 'unit_price', 'slug', 'sku', 'purchase_price', 'discount', 'discount_type', 'quantity', 'description', 'pdf_specification', 'meta_title', 'meta_description', 'meta_image', 'is_active', 'publish_stat', 'created_by', 'updated_by', 'deleted_by', 'shipping_cost', 'outside_shipping_cost', 'seller_id', 'sale_price', 'warranty', 'return_policy', 'is_manage_stock'
     ];
-    
+
     protected $casts = [
         'tags' => 'json',
     ];
@@ -55,6 +55,11 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class, 'product_id', 'id');
+    }
+
+    public function orderImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id')->orderBy('position', 'asc');
     }
     public function details()
     {

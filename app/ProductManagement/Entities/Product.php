@@ -47,6 +47,11 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
+
+    public function orderImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id')->orderBy('position', 'asc');
+    }
     public function details()
     {
         return $this->hasOne(ProductDetail::class, 'product_id', 'id')->withDefault([

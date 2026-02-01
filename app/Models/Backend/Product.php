@@ -30,6 +30,11 @@ class Product extends Model
         return $this->hasOne(\App\Models\Backend\ProductImage::class, 'product_id')->select('id','image','product_id');
     }
 
+    public function orderImages()
+    {
+        return $this->hasMany(\App\Modules\Backend\ProductManagement\Entities\Product::class, 'product_id', 'id')->orderBy('position', 'asc');
+    }
+
     public function colors()
     {
         return $this->belongsToMany(Color::class)->withTimestamps();
