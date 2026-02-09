@@ -11,10 +11,12 @@ use App\Modules\Backend\PromotionManagement\Entities\PromotionalProduct;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Mockery\CountValidator\Exception;
+use Modules\ProductManagement\Entities\Color;
 use function auth;
 use function back;
 use function csrf_field;
@@ -369,6 +371,30 @@ class PromotionalProductController extends Controller
     {
         Wholesale::whereIn('product_id', $request->ids)->delete();
         Product::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function bulkDeleteColor(Request $request)
+    {
+        \App\Models\Backend\Color::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function bulkDeleteSize(Request $request)
+    {
+        \App\Models\Backend\Size::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function bulkDeleteUnit(Request $request)
+    {
+        DB::table('units')->whereIn('id', $request->ids)->delete();
 
         return response()->json([
             'success' => true

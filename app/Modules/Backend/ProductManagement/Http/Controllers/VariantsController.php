@@ -15,20 +15,41 @@ class VariantsController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function color()
+    public function color(Request $request)
     {
-        $colors = DB::table('colors')->orderBy('id', 'desc')->paginate(15);
+        $allowedLimits = [10, 25, 50, 100];
+
+        // Works everywhere
+        $limit = (int) $request->get('limit', 10);
+        $limit = in_array($limit, $allowedLimits, true) ? $limit : 10;
+
+        $colors = DB::table('colors')->latest()
+            ->paginate($limit)
+            ->appends($request->query());
+
         return view('productmanagement::variants.colors', compact('colors'));
     }
 
-    public function unitsColor()
+    public function unitsColor(Request $request)
     {
-        $unites = DB::table('units')->orderBy('id', 'desc')->paginate(15);
+        $allowedLimits = [10, 25, 50, 100];
+
+        // Works everywhere
+        $limit = (int) $request->get('limit', 10);
+        $limit = in_array($limit, $allowedLimits, true) ? $limit : 10;
+        $unites = DB::table('units')->paginate($limit)
+            ->appends($request->query());
         return view('productmanagement::variants.unites', compact('unites'));
     }
-    public function size()
+    public function size(Request $request)
     {
-        $sizes = DB::table('sizes')->orderBy('id', 'desc')->paginate(15);
+        $allowedLimits = [10, 25, 50, 100];
+
+        // Works everywhere
+        $limit = (int) $request->get('limit', 10);
+        $limit = in_array($limit, $allowedLimits, true) ? $limit : 10;
+        $sizes = DB::table('sizes')->latest()->paginate($limit)
+            ->appends($request->query());
         return view('productmanagement::variants.sizes', compact('sizes'));
     }
 

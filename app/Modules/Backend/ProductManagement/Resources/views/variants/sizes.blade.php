@@ -13,6 +13,21 @@
                             <div class="mb-2">
                                 <h4 class="text-center">Size</h4>
                             </div>
+                            <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
+                                <form action="{{ route('backend.variant.size') }}" method="GET" id="limitForm">
+
+                                    <select name="limit"
+                                            class="form-select"
+                                            onchange="this.form.submit()">
+                                        @foreach([10, 25, 50, 100] as $limit)
+                                            <option value="{{ $limit }}"
+                                                {{ request('limit', 10) == $limit ? 'selected' : '' }}>
+                                                {{ $limit }} per page
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
                             <form action="{{ route('backend.variant.store') }}" class="d-flex gap-1" style="width: 100%" method="POST">
                                 @csrf
                                 <div style="width: 100%">
@@ -26,6 +41,12 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            <input type="checkbox" id="selectAll">
+                                            <button type="button" id="bulkDeleteBtn" class="btn btn-sm text-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </th>
                                         <th scope="col">Sl</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Action</th>
@@ -34,6 +55,11 @@
                                 <tbody>
                                     @foreach ($sizes as $key => $size)
                                         <tr>
+                                            <td>
+                                                <input type="checkbox" name="ids[]" value="{{ $size->id }}"
+                                                       data-bulk="true"
+                                                       class="wholesaleCheckbox rowCheckbox">
+                                            </td>
                                             <th scope="row">{{ $size->id }}</th>
                                             <td>{{ $size->name }}</td>
                                             <td>
@@ -123,6 +149,120 @@
                         "{{ url('variants-size/update') }}/" + id;
                 });
             });
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const selectAll = document.getElementById('selectAll');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+
+            /* =====================================================
+               1. LOCK STATUS CHECKBOXES (IMMUTABLE FOR BULK)
+            ===================================================== */
+            function lockStatusCheckboxes() {
+                document.querySelectorAll('input[data-bulk="false"]').forEach(cb => {
+
+                    // store original state once
+                    if (!cb.dataset.locked) {
+                        cb.dataset.locked = cb.checked ? '1' : '0';
+                    }
+
+                    // stop all bubbling / row triggers
+                    ['click', 'change', 'mousedown'].forEach(evt => {
+                        cb.addEventListener(evt, e => e.stopPropagation());
+                    });
+
+                    // force state back if anything toggles it
+                    cb.checked = cb.dataset.locked === '1';
+                });
+            }
+
+            lockStatusCheckboxes();
+
+            /* =====================================================
+               2. SELECT ALL (ONLY ROW CHECKBOXES)
+            ===================================================== */
+            if (selectAll) {
+                selectAll.addEventListener('change', function () {
+
+                    document.querySelectorAll('input[data-bulk="true"]').forEach(cb => {
+                        cb.checked = this.checked;
+                    });
+
+                    // re-assert status states
+                    lockStatusCheckboxes();
+                });
+            }
+
+            /* =====================================================
+               3. ROW CHECKBOX CHANGE → SYNC SELECT ALL
+            ===================================================== */
+            function bindRowCheckboxEvents() {
+                document.querySelectorAll('input[data-bulk="true"]').forEach(cb => {
+                    if (cb.dataset.bound) return;
+
+                    cb.dataset.bound = '1';
+
+                    cb.addEventListener('change', function () {
+
+                        const total = document.querySelectorAll('input[data-bulk="true"]').length;
+                        const checked = document.querySelectorAll('input[data-bulk="true"]:checked').length;
+
+                        if (selectAll) {
+                            selectAll.checked = total === checked;
+                        }
+
+                        lockStatusCheckboxes();
+                    });
+                });
+            }
+
+            bindRowCheckboxEvents();
+
+            /* =====================================================
+               4. BULK DELETE AJAX
+            ===================================================== */
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.addEventListener('click', function () {
+
+                    const checked = document.querySelectorAll('input[data-bulk="true"]:checked');
+
+                    if (!checked.length) {
+                        alert('Please select at least one item');
+                        return;
+                    }
+
+                    if (!confirm('Are you sure you want to delete selected items?')) {
+                        return;
+                    }
+
+                    const ids = Array.from(checked).map(cb => cb.value);
+
+                    fetch("{{ route('size.bulkDelete') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ ids })
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                location.reload();
+                            } else {
+                                alert('Delete failed');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Something went wrong');
+                        });
+                });
+            }
 
         });
     </script>
