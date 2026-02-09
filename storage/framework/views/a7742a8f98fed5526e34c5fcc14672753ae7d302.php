@@ -53,6 +53,21 @@
                                     <p class="maan-counter-content"><?php echo e(__('Order Canceled')); ?></p>
                                 </div>
                             </a>
+
+                            <?php
+
+                            ?>
+                            <a href="javascript:orderList(7)" class="maan-counter-box">
+                                <div class="maan-icon maan-radius maan-icon-clr-lightred">
+                                    <i> <img src="<?php echo e(asset('customer/img/icons/money-com.svg')); ?>" alt="Icon"></i>
+                                </div>
+                                <div class="maan-desc">
+                                    <div class="maan-counter">
+                                        <span class="maan-counter-title counter"><?php echo e(number_format(sumOfOrder(),2)); ?></span> TK
+                                    </div>
+                                    <p class="maan-counter-content"><?php echo e(__('Total Order Amount')); ?></p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
