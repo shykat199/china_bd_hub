@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Print</title>
-    <link rel="stylesheet" href="{{asset('backend/assets/css/bootstrap.min.css')}}" />
-{{--    <link rel="stylesheet" href="{{asset('public/frontEnd/css/all.min.css')}}" />--}}
+    <link rel="stylesheet" href="<?php echo e(asset('backend/assets/css/bootstrap.min.css')); ?>" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -26,9 +26,9 @@
     td{
         font-size: 16px;
     }
-    @media print {
+    @media  print {
 
-        @page {
+        @page  {
             size: A4;
             margin: 10mm;
         }
@@ -71,14 +71,14 @@
     }
 
 </style>
-{{--<div class="invoice-innter">--}}
-{{--    <div class="row">--}}
-{{--        <div class="col-sm-12 mt-3 text-center">--}}
-{{--            <button onclick="printFunction()"class="no-print btn btn-xs btn-success waves-effect waves-light"><i class="fa fa-print"></i></button>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</div>--}}
-@foreach($orders as $order)
+
+
+
+
+
+
+
+<?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <section class="customer-invoice ">
         <div class="container">
             <div class="row">
@@ -87,12 +87,12 @@
                         <table style="width:100%">
                             <tr>
                                 <td style="width: 40%; float: left; padding-top: 15px;">
-                                    <img src="{{asset('uploads/logo.svg')}}" width="190px" style="margin-top:25px !important" alt="">
-                                    <p style="font-size: 14px; color: #222; margin: 20px 0;"><strong>Payment Method:</strong> <span style="text-transform: uppercase;">{{$order->payment?$order->payment->payment_method:'COD'}}</span></p>
+                                    <img src="<?php echo e(asset('uploads/logo.svg')); ?>" width="190px" style="margin-top:25px !important" alt="">
+                                    <p style="font-size: 14px; color: #222; margin: 20px 0;"><strong>Payment Method:</strong> <span style="text-transform: uppercase;"><?php echo e($order->payment?$order->payment->payment_method:'COD'); ?></span></p>
                                     <div class="invoice_form">
                                         <p style="font-size:16px;line-height:1.8;color:#222"><strong>Invoice From:</strong></p>
                                         <p style="font-size:16px;line-height:1.8;color:#222">China Hub</p>
-                                        <p style="font-size:16px;line-height:1.8;color:#222">{{maanAppearance('hotline_number')}}</p>
+                                        <p style="font-size:16px;line-height:1.8;color:#222"><?php echo e(maanAppearance('hotline_number')); ?></p>
                                     </div>
                                 </td>
                                 <td  style="width:60%;float: left;">
@@ -100,15 +100,15 @@
                                         <p style="font-size: 30px; color: #fff; transform: skew(-38deg); text-transform: uppercase; text-align: right; font-weight: bold;">Invoice</p>
                                     </div>
                                     <div class="invoice-bar" style="background: #fff; transform: skew(36deg); width: 72%; margin-left: 182px; padding: 12px 32px; margin-top: 6px;">
-                                        <p style="font-size: 15px; color: #222;font-weight:bold; transform: skew(-36deg); text-align: right; padding-right: 18px">Invoice ID : <strong>#{{$order->order_no}}</strong></p>
-                                        <p style="font-size: 15px; color: #222;font-weight:bold; transform: skew(-36deg); text-align: right; padding-right: 32px">Invoice Date: <strong>{{$order->created_at->format('d-m-y')}}</strong></p>
+                                        <p style="font-size: 15px; color: #222;font-weight:bold; transform: skew(-36deg); text-align: right; padding-right: 18px">Invoice ID : <strong>#<?php echo e($order->order_no); ?></strong></p>
+                                        <p style="font-size: 15px; color: #222;font-weight:bold; transform: skew(-36deg); text-align: right; padding-right: 32px">Invoice Date: <strong><?php echo e($order->created_at->format('d-m-y')); ?></strong></p>
                                     </div>
                                     <div class="invoice_to" style="padding-top: 20px;">
                                         <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;"><strong>Invoice To:</strong></p>
-                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;">{{$order->shipping?$order->shipping->name:$order->shipping_name}}</p>
-                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;">{{$order->shipping?$order->shipping->phone:$order->shipping_mobile}}</p>
-                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;">{{$order->shipping?$order->shipping->address:$order->shipping_address_1}}</p>
-                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;">{{$order->shipping?$order->shipping->area:$order->shipping_address_2}}</p>
+                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;"><?php echo e($order->shipping?$order->shipping->name:$order->shipping_name); ?></p>
+                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;"><?php echo e($order->shipping?$order->shipping->phone:$order->shipping_mobile); ?></p>
+                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;"><?php echo e($order->shipping?$order->shipping->address:$order->shipping_address_1); ?></p>
+                                        <p style="font-size:16px;line-height:1.8;color:#222;text-align: right;"><?php echo e($order->shipping?$order->shipping->area:$order->shipping_address_2); ?></p>
                                     </div>
                                 </td>
                             </tr>
@@ -124,15 +124,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($order->details as $key=>$value)
+                            <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$value->product->name}} <br> @if($value->product_size) <small>Size: {{$value->product_size}}</small> @endif   @if($value->product_color) <small>Color: {{$value->product_color}}</small> @endif</td>
-                                    <td>৳{{$value->sale_price}}</td>
-                                    <td>{{$value->qty}}</td>
-                                    <td>৳{{$value->sale_price*$value->qty}}</td>
+                                    <td><?php echo e($loop->iteration); ?></td>
+                                    <td><?php echo e($value->product->name); ?> <br> <?php if($value->product_size): ?> <small>Size: <?php echo e($value->product_size); ?></small> <?php endif; ?>   <?php if($value->product_color): ?> <small>Color: <?php echo e($value->product_color); ?></small> <?php endif; ?></td>
+                                    <td>৳<?php echo e($value->sale_price); ?></td>
+                                    <td><?php echo e($value->qty); ?></td>
+                                    <td>৳<?php echo e($value->sale_price*$value->qty); ?></td>
                                 </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                         <div class="invoice-bottom">
@@ -141,24 +141,24 @@
                                 <tbody style="background:#f1f9f8">
                                 <tr>
                                     <td><strong>SubTotal</strong></td>
-                                    <td><strong>৳{{$order->details->sum('sale_price')}}</strong></td>
+                                    <td><strong>৳<?php echo e($order->details->sum('sale_price')); ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Shipping(+)</strong></td>
-                                    <td><strong>৳{{$order->shipping_cost ?? 0}}</strong></td>
+                                    <td><strong>৳<?php echo e($order->shipping_cost ?? 0); ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Discount(-)</strong></td>
-                                    <td><strong>৳{{$order->discount ?? 0}}</strong></td>
+                                    <td><strong>৳<?php echo e($order->discount ?? 0); ?></strong></td>
                                 </tr>
                                 <tr style="background:#BE1E2D;color:#fff">
                                     <td><strong>Final Total</strong></td>
-                                    <td><strong>৳{{$order->total_price}}</strong></td>
+                                    <td><strong>৳<?php echo e($order->total_price); ?></strong></td>
                                 </tr>
                                 </tbody>
                             </table>
                             <div class="terms-condition" style="overflow: hidden; width: 100%; text-align: center; padding: 20px 0; border-top: 1px solid #ddd;">
-                                <h5 style="font-style: italic;"><a href="{{route('backend.order-list-page',['slug'=>'terms-condition'])}}">Terms & Conditions</a></h5>
+                                <h5 style="font-style: italic;"><a href="<?php echo e(route('backend.order-list-page',['slug'=>'terms-condition'])); ?>">Terms & Conditions</a></h5>
                                 <p style="text-align: center; font-style: italic; font-size: 15px; margin-top: 10px;">* This is a computer generated invoice, does not require any signature.</p>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
             </div>
         </div>
     </section>
-@endforeach
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 <script>
     function printFunction() {
         window.print();
@@ -175,3 +175,4 @@
 </script>
 </body>
 </html>
+<?php /**PATH /var/www/html/china_hub/resources/views/frontend/order-invoice.blade.php ENDPATH**/ ?>
