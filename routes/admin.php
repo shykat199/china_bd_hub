@@ -49,3 +49,12 @@ Route::post('suspend-user/bulk-delete', [\App\Modules\Backend\CustomerManagement
 
 Route::post('bulk-delete-stock', [\App\Http\Controllers\Backend\StockController::class, 'bulkDelete'])
     ->name('backend.stockBulkDelete');
+
+Route::post('/color/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteColor'])
+    ->name('color.bulkDelete');
+
+Route::post('/size/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteSize'])
+    ->name('size.bulkDelete');
+
+Route::post('/unit/bulk-delete', [\App\Modules\Backend\PromotionManagement\Http\Controllers\PromotionalProductController::class, 'bulkDeleteUnit'])
+    ->name('unit.bulkDelete');

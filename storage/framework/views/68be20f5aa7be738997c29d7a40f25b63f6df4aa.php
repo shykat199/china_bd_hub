@@ -1,8 +1,7 @@
-@extends('backend.layouts.app')
-@section('title', 'Colors - ')
-@section('content')
+<?php $__env->startSection('title', 'Colors - '); ?>
+<?php $__env->startSection('content'); ?>
     <div class="content-body">
-        @include('productmanagement::includes.product_management')
+        <?php echo $__env->make('productmanagement::includes.product_management', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!-- Tab Content Start -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="add-brand" role="tabpanel" Area-labelledby="add-brand-tab">
@@ -14,29 +13,43 @@
                             </div>
 
                             <div class="col-xxl-3 col-lg-3 col-md-6 mb-2 ms-auto text-end">
-                                <form action="{{ route('backend.variant.color') }}" method="GET" id="limitForm">
+                                <form action="<?php echo e(route('backend.variant.color')); ?>" method="GET" id="limitForm">
 
                                     <select name="limit"
                                             class="form-select"
                                             onchange="this.form.submit()">
-                                        @foreach([10, 25, 50, 100] as $limit)
-                                            <option value="{{ $limit }}"
-                                                {{ request('limit', 10) == $limit ? 'selected' : '' }}>
-                                                {{ $limit }} per page
+                                        <?php $__currentLoopData = [10, 25, 50, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $limit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($limit); ?>"
+                                                <?php echo e(request('limit', 10) == $limit ? 'selected' : ''); ?>>
+                                                <?php echo e($limit); ?> per page
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </form>
                             </div>
-                            <form action="{{ route('backend.variant.store') }}" class="d-flex gap-1" style="width: 100%" method="POST">
-                                @csrf
+                            <form action="<?php echo e(route('backend.variant.store')); ?>" class="d-flex gap-1" style="width: 100%" method="POST">
+                                <?php echo csrf_field(); ?>
                                 <div style="width: 80%; height: 20%">
-                                    <input type="text" class="form-control" name="color" placeholder="Color Name" value="{{ old('color') }}" required>
-                                    <span class="text-danger">@error('color'){{ $message }}@enderror</span>
+                                    <input type="text" class="form-control" name="color" placeholder="Color Name" value="<?php echo e(old('color')); ?>" required>
+                                    <span class="text-danger"><?php $__errorArgs = ['color'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><?php echo e($message); ?><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                                 </div>
                                 <div style="width: 20%">
-                                    <input type="color" class="form-control" name="hex" placeholder="Hex Code" value="{{ old('hex') }}" required>
-                                    <span class="text-danger">@error('hex'){{ $message }}@enderror</span>
+                                    <input type="color" class="form-control" name="hex" placeholder="Hex Code" value="<?php echo e(old('hex')); ?>" required>
+                                    <span class="text-danger"><?php $__errorArgs = ['hex'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><?php echo e($message); ?><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-success text-white">Add</button>
@@ -58,33 +71,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($colors as $key => $color)
+                                    <?php $__currentLoopData = $colors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="ids[]" value="{{ $color->id }}"
+                                                <input type="checkbox" name="ids[]" value="<?php echo e($color->id); ?>"
                                                        data-bulk="true"
                                                        class="wholesaleCheckbox rowCheckbox">
                                             </td>
-                                            <th scope="row">{{ $color->id }}</th>
-                                            <td>{{ $color->name }}</td>
-                                            <td>{{ $color->hex }}</td>
+                                            <th scope="row"><?php echo e($color->id); ?></th>
+                                            <td><?php echo e($color->name); ?></td>
+                                            <td><?php echo e($color->hex); ?></td>
                                             <td>
                                                 <!-- EDIT -->
                                                 <button
                                                     class="btn btn-sm btn-primary edit-btn"
-                                                    data-id="{{ $color->id }}"
-                                                    data-name="{{ $color->name }}"
-                                                    data-hex="{{ $color->hex }}"
+                                                    data-id="<?php echo e($color->id); ?>"
+                                                    data-name="<?php echo e($color->name); ?>"
+                                                    data-hex="<?php echo e($color->hex); ?>"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editColorModal">
                                                     Edit
                                                 </button>
 
                                                 <!-- DELETE -->
-                                                <form action="{{ route('variant.delete', $color->id) }}"
+                                                <form action="<?php echo e(route('variant.delete', $color->id)); ?>"
                                                       method="POST"
                                                       class="d-inline">
-                                                    @csrf
+                                                    <?php echo csrf_field(); ?>
                                                     <button class="btn btn-sm btn-danger text-white"
                                                             onclick="return confirm('Are you sure?')">
                                                         Delete
@@ -92,11 +105,12 @@
                                                 </form>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-end">
-                                {{ $colors->links() }}
+                                <?php echo e($colors->links()); ?>
+
                             </div>
                         </div>
                     </div>
@@ -107,7 +121,7 @@
         <div class="modal fade" id="editColorModal" tabindex="-1">
             <div class="modal-dialog">
                 <form method="POST" id="editColorForm">
-                    @csrf
+                    <?php echo csrf_field(); ?>
 
                     <div class="modal-content">
                         <div class="modal-header">
@@ -145,8 +159,8 @@
             </div>
         </div>
     </div>
-@endsection
-@push('custom-script')
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('custom-script'); ?>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
@@ -162,7 +176,7 @@
 
                     // 🔥 THIS IS THE FIX
                     document.getElementById('editColorForm').action =
-                        "{{ url('variants/update') }}/" + id;
+                        "<?php echo e(url('variants/update')); ?>/" + id;
                 });
             });
 
@@ -257,11 +271,11 @@
 
                     const ids = Array.from(checked).map(cb => cb.value);
 
-                    fetch("{{ route('color.bulkDelete') }}", {
+                    fetch("<?php echo e(route('color.bulkDelete')); ?>", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
                         },
                         body: JSON.stringify({ ids })
                     })
@@ -282,4 +296,6 @@
 
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/china_hub/app/Modules/Backend/ProductManagement/Resources/views/variants/colors.blade.php ENDPATH**/ ?>
