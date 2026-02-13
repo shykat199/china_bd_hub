@@ -240,7 +240,6 @@
         }
     </style>
 <?php $__env->stopPush(); ?>
-
 <?php $__env->startSection('content'); ?>
     <!-- Breadcrumb Start -->
     <nav class="breadcrumb-manu" area-label="breadcrumb">
@@ -274,10 +273,16 @@
         <div class="container">
             <div class="product-details-layout">
                 <div class="layout-items">
-
-
                     <!-- Primary carousel image -->
-                    <?php if($product->images->first()): ?>
+                    <?php if($product->orderImages->first() && $product->orderImages->first()->position != null): ?>
+                        <div class="main-image-wrapper">
+                            <img
+                                src="<?php echo e(asset('uploads/products/galleries/' . $product->orderImages->first()->image)); ?>"
+                                id="show-img"
+                                alt="<?php echo e($product->name); ?>"
+                            >
+                        </div>
+                    <?php else: ?>
                         <div class="main-image-wrapper">
                             <img
                                 src="<?php echo e(asset('uploads/products/galleries/' . $product->images->first()->image)); ?>"
@@ -289,17 +294,21 @@
 
                     <!-- Secondary carousel image thumbnail gallery -->
                     <div class="small-img">
-                        <div class="icon-left" id="prev-img"><i class="fas fa-chevron-left"></i></div>
+                        <div class="icon-left" id="prev-img">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
                         <img src="images/next-icon.png" alt="" id="prev-img">
                         <div class="small-container">
                             <div id="small-img-roll">
-                                <?php $__currentLoopData = $product->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <img
-                                        src="<?php echo e(asset('uploads/products/galleries/' . $image->image)); ?>"
-                                        class="show-small-img"
-                                        alt="product-thumbnail-sm"
-                                    >
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($product->orderImages->first() && $product->orderImages->first()->position != null): ?>
+                                    <?php $__currentLoopData = $product->orderImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <img src="<?php echo e(asset('uploads/products/galleries/' . $image->image)); ?>" class="show-small-img" alt="product-thumbnail-sm">
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php else: ?>
+                                    <?php $__currentLoopData = $product->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <img src="<?php echo e(asset('uploads/products/galleries/' . $image->image)); ?>" class="show-small-img" alt="product-thumbnail-sm">
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="icon-right" id="next-img"><i class="fas fa-chevron-right"></i></div>

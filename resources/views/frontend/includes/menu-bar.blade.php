@@ -2,7 +2,7 @@
 <style>
     .category-scroll {
         display: flex;
-        gap: 20px;
+        gap: 5px;
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;

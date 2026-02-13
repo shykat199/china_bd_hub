@@ -1,6 +1,22 @@
 <?php
     $bn_cart_button = Illuminate\Support\Facades\DB::table('bn_cart_button')->find(1);
 ?>
+
+<style>
+    .product-card .product-img {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 1 / 1; /* keeps square */
+    }
+
+    .product-card .product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;   /* keeps ratio without stretching */
+        display: block;
+    }
+</style>
 <div class="product-card">
     <div class="product-img">
         <a href="<?php echo e(route('product', $product->slug)); ?>">

@@ -327,6 +327,8 @@ unset($__errorArgs, $__bag); ?>
 
                                 <input type="file" id="imageInput" name="images[]" multiple accept="image/*" hidden>
 
+                                <input type="hidden" name="image_order" id="imageOrder">
+
                                 <div id="dropzone" class="custom-dropzone">
                                     <i class="iui-cloud-upload"></i>
                                     <p>Drag & drop images here or click to upload</p>
@@ -667,7 +669,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6><?php echo e(__('Stock Visibility State')); ?></h6>
@@ -776,7 +777,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6><?php echo e(__('Flash Deal')); ?></h6>
@@ -795,7 +795,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6><?php echo e(__('Estimate Shipping Time')); ?></h6>
@@ -852,7 +851,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     <h6><?php echo e(__('Vat & TAX')); ?></h6>
@@ -868,7 +866,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -888,14 +885,12 @@ unset($__errorArgs, $__bag); ?>
 <?php $__env->startPush('js'); ?>
     <?php echo $__env->make('productmanagement::products.product-js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <script>
-
         let imagesList = [];
 
-        let preloadedImages = <?php echo json_encode($product->images ?? [], 15, 512) ?>;
+        let preloadedImages = <?php echo json_encode($product->orderImages ?? [], 15, 512) ?>;
 
         preloadedImages.forEach(img => {
             imagesList.push({
@@ -938,6 +933,7 @@ unset($__errorArgs, $__bag); ?>
 
             renderPreviews();
             syncInputFiles();
+            updateImageOrderInput();
         }
 
         function renderPreviews() {
@@ -979,6 +975,7 @@ unset($__errorArgs, $__bag); ?>
                     imagesList = reordered;
                     renderPreviews();
                     syncInputFiles();
+                    updateImageOrderInput();
                 }
             });
         }
@@ -988,6 +985,7 @@ unset($__errorArgs, $__bag); ?>
             imagesList.splice(index, 1);
             renderPreviews();
             syncInputFiles();
+            updateImageOrderInput();
         });
 
         function syncInputFiles() {
@@ -1002,7 +1000,20 @@ unset($__errorArgs, $__bag); ?>
             document.getElementById('imageInput').files = dt.files;
         }
 
+        function updateImageOrderInput() {
+            let order = [];
+
+            imagesList.forEach(img => {
+                if (img.type === 'old') {
+                    order.push(img.id);
+                }
+            });
+
+            $('#imageOrder').val(JSON.stringify(order));
+        }
+
         renderPreviews();
+        updateImageOrderInput();
     </script>
 
     <script>
