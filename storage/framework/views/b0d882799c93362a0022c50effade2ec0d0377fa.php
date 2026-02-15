@@ -141,15 +141,15 @@
                                 <tbody style="background:#f1f9f8">
                                 <tr>
                                     <td><strong>SubTotal</strong></td>
-                                    <td><strong>৳<?php echo e($order->details->sum('total_price')); ?></strong></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Discount(-)</strong></td>
-                                    <td><strong>৳<?php echo e($order->discount ?? 0); ?></strong></td>
+                                    <td><strong>৳<?php echo e($order->details->sum('sale_price')); ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Shipping(+)</strong></td>
                                     <td><strong>৳<?php echo e($order->shipping_cost ?? 0); ?></strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Discount(-)</strong></td>
+                                    <td><strong>৳<?php echo e($order->discount ?? 0); ?></strong></td>
                                 </tr>
                                 <tr style="background:#BE1E2D;color:#fff">
                                     <td><strong>Final Total</strong></td>

@@ -88,3 +88,8 @@ function AdminNotification($id, $url, $message) {
     $notify_user = App\Models\Backend\Admin::where('is_active', 1)->first();
     Notification::send($notify_user, new SendNotification($notify));
 }
+
+function getBrandProductCount($brandId)
+{
+    return \App\Modules\Backend\ProductManagement\Entities\Product::where('brand_id', $brandId)->count();
+}
