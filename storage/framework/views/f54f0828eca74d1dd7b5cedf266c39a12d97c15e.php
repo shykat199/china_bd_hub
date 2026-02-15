@@ -7,13 +7,13 @@
         position: relative;
         overflow: hidden;
         width: 100%;
-        aspect-ratio: 1 / 1; /* keeps square */
+        aspect-ratio: 1 / 1;
     }
 
     .product-card .product-img img {
         width: 100%;
         height: 100%;
-        object-fit: cover;   /* keeps ratio without stretching */
+        object-fit: cover;
         display: block;
     }
 </style>

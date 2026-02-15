@@ -484,6 +484,7 @@ function canReview($user,$product): bool
 function uniBoxSuggestions()
 {
     return Product::query()
+        ->whereHas('images')
         ->with('images')
         ->orderByDesc('total_viewed')
         ->take(2)

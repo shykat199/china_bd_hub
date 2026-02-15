@@ -256,7 +256,7 @@
                         <a href="<?php echo e(route('category',[$product->category->slug])); ?>"><?php echo e($product->category->name); ?></a>
                     </li>
                 <?php endif; ?>
-                <?php if($product->category->subCategory): ?>
+                <?php if(!empty($product->category->subCategory)): ?>
                     <li class="breadcrumb-item">
                         <a href="<?php echo e(route('category',[$product->category->subCategory->slug])); ?>"><?php echo e($product->category->subCategory->name); ?></a>
                     </li>

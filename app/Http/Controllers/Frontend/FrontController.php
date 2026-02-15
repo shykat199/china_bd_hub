@@ -683,7 +683,8 @@ class FrontController extends Controller
                 ->orWhere('tags', 'like', '%' . $request->get('slug') . '%');
         }
 
-        $p = Product::query()->whereHas('productstock', function ($q) use ($request) {
+        if($request->filled('color') || $request->filled('size')) {
+            $p = Product::query()->whereHas('productstock', function ($q) use ($request) {
 
                 if ($request->filled('color')) {
                     $q->whereIn('color_id', $request->color);
@@ -693,6 +694,7 @@ class FrontController extends Controller
                     $q->whereIn('size_id', $request->size);
                 }
             });
+        }
 
         if ($request->has('brand')) {
             $brand = $request->get('brand');
