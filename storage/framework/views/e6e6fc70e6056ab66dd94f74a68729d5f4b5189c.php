@@ -4,7 +4,11 @@
         <ul>
             <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
-                    $brandProductCount = \App\Modules\Backend\ProductManagement\Entities\Product::where('is_active','1')->where('brand_id', $brand->id)->count();
+                    $brandProductCount = \App\Modules\Backend\ProductManagement\Entities\Product::where('quantity', ">", 0)
+                    ->where('is_manage_stock', 1)
+                    ->where('is_active',1)
+                    ->where('brand_id', $brand->id)
+                    ->count();
                 ?>
                 <li>
                     <input type="checkbox" id="<?php echo e($brand->slug); ?>" class="brand-check" value="<?php echo e($brand->id); ?>">
